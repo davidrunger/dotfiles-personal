@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+if [[ $PWD =~ /active_actions$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /david_runger$ ]] ; then
+  export RAILS_ENV=test NODE_ENV=test DISABLE_SPRING=1
+  export POSTGRES_USER=david
+  export POSTGRES_HOST=localhost
+  # Codedov tries to post results when `CI=true` is set, so don't enable by default,
+  # but it can be helpful to reproduce some issues (since it triggers eager-loading).
+  # export CI=true
+  set -x
+  redis-cli -n 8 FLUSHDB
+  bin/pallets --verbose -r ./bin/run-tests.rb
+elif [[ $PWD =~ /runger_style$ ]] ; then
+  set -x
+  bin/rubocop
+elif [[ $PWD =~ /fcom$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /heat$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /living_document$ ]] ; then
+  set -x
+  bin/rubocop --format clang
+  bin/rspec --format progress --force-color
+elif [[ $PWD =~ /rspec_performance_summary$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /shaped$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /release_assistant$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /schedjewel$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+elif [[ $PWD =~ /pallets$ ]] ; then
+  set -x
+  bin/rspec
+elif [[ $PWD =~ /simple_cov-formatter-terminal$ ]] ; then
+  set -x
+  bin/rubocop
+  bin/rspec
+else
+  echo 'Unknown directory!'
+  exit 1
+fi
