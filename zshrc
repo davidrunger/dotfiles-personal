@@ -245,26 +245,30 @@ source $ZSH/oh-my-zsh.sh
 # git-extras completions
 source /usr/local/opt/git-extras/share/git-extras/git-extras-completion.zsh
 
+# path setup
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin"
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 export PATH=$HOME/bin:$HOME/workspace/dotfiles/bin:$HOME/Sync/bin:$PATH
+
+# ruby setup
 export PATH=$HOME/.rbenv/bin:$PATH
 eval "$(rbenv init -)"
 
-# init pyenv
+# python setup
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 export PYTHONPATH='/Users/david/lib/python'
 
+# go setup
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+# node setup
 export NODE_ENV='development'
 export NVM_SYMLINK_CURRENT=true # https://stackoverflow.com/a/60063217/4009384
 export PATH=$PATH:node_modules/.bin
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
 export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; can't start with `~/`
 # OLD SLOW WAY to load nvm:
 # [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -275,7 +279,6 @@ export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; c
 export PATH="$NVM_DIR/versions/node/$(<$NVM_DIR/alias/default)/bin:$PATH"
 # alias `nvm` to this one liner lazy load of the normal nvm script
 alias nvm="unalias nvm; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@"
-
 
 # load fzf (fuzzy searching)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
