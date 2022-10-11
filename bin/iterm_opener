@@ -12,7 +12,7 @@ absolute_path = "#{dir}/#{file}"
 
 if file_and_line.match?(GIT_SHA_REGEX)
   # open with Chrome
-  system(%(open -a Google\\ Chrome "https://github.com/hired/hired/commit/#{file_and_line}"))
+  system(%(open -a Firefox "https://github.com/davidrunger/david_runger/commit/#{file_and_line}"))
 elsif system(%(file #{absolute_path} | grep -q "text"))
   # open with Sublime
   system("~/workspace/dotfiles/bin/subl #{dir}/#{cleaned}")
