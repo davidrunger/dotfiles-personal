@@ -20,7 +20,7 @@ class Runner
   end
 end
 
-# run tests with `cd /Users/david/Sync/bin/ && ruby open-gh-pr && cd -`
+# run tests with `cd ~/workspace/dotfiles/bin/ && ruby open-gh-pr && cd -`
 receiving_piped_input = !STDIN.tty?
 if receiving_piped_input
   Runner.new(ARGF.read).open_pr
