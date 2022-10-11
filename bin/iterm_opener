@@ -3,11 +3,8 @@
 dir = ARGV[0] # Example: "/Users/david/Downloads"
 file_and_line = ARGV[1] # Example: "file.txt:2"
 
-# rubocop:disable Style/RegexpLiteral
-GIT_SHA_REGEX = %r{[a-f0-9]{40}}.freeze
-HTTP_REGEX = %r{https?://([a-z0-9A-Z]+(:[a-zA-Z0-9]+)?@)?[-a-z0-9A-Z\-]+(\.[-a-z0-9A-Z\-]+)*((:[0-9]+)?)(/[a-zA-Z0-9;:/\.\-_+%~?&amp;@=#\(\)]*)?}.freeze
+GIT_SHA_REGEX = %r{[a-f0-9]{40}}
 cleaned = file_and_line.sub(/^webpack:\/\/\//, '')
-# rubocop:enable Style/RegexpLiteral
 cleaned.sub!(/\)$/, '')
 cleaned.sub!(%r{\A(a/|b/)}, '')
 file = cleaned.split(':').first
