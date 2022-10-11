@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+
+export GH_CHECKS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+wait-for-gh-checks
+gh pr merge "$GH_CHECKS_BRANCH" --merge
+say -v Rishi "P R merged"
+git fetch --no-tags --quiet origin master:master
+
+# update "safe" branch as long as it's not checked out (which causes an update attempt to error)
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "safe" ]]; then
+  git fetch --no-tags --quiet origin master:safe
+fi
+
+# switch to "safe" branch if still on the local branch that was just merged
+if [[ "$(git rev-parse --abbrev-ref HEAD)" == "$GH_CHECKS_BRANCH" ]]; then
+  git checkout safe >/dev/null 2>&1
+fi
+
+git branch -d "$GH_CHECKS_BRANCH" >/dev/null 2>&1
+git remote prune origin >/dev/null 2>&1
+echo "----"
+git branch -vv
