@@ -1,0 +1,216 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'active_support/core_ext/numeric/time'
+require 'active_support/core_ext/string/filters'
+require 'forwardable'
+require 'memoist'
+
+class Runner
+  extend Memoist
+
+  MAX_TIME = 8.minutes
+  RETRY_INTERVAL = 10.seconds
+
+  def run
+    start_time = Time.now
+
+    loop do
+      loop_runner = ::Runner::LoopRunner.new(runner: self, start_time:)
+      loop_runner.run_loop
+      sleep(RETRY_INTERVAL)
+    end
+  end
+
+  def print_and_say(message)
+    puts(message)
+    system("say -v Rishi #{message}")
+  end
+
+  def debug(message)
+    puts(message) if debug?
+  end
+
+  memoize \
+  def debug?
+    !ENV.key?('QUIET_WAIT_FOR_GH_CHECKS')
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  memoize \
+  def expected_num_passed_checks
+    # rubocop:disable Lint/DuplicateBranch
+    case repo
+    when 'active_actions' then 3
+    when 'david_runger'
+      dependabot_branch? ? 3 : 4
+    when 'fcom' then 1
+    when 'pallets' then 1
+    when 'schedjewel' then 3
+    when 'skedjewel' then 1
+    when 'shaped' then 1
+    when 'simple_cov-formatter-terminal' then 3
+    else fail("Unknown #expected_num_passed_checks for repo '#{repo}'!")
+    end
+    # rubocop:enable Lint/DuplicateBranch
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+
+  memoize \
+  def repo
+    Dir.pwd.split('/').last
+  end
+
+  memoize \
+  def dependabot_branch?
+    authors == ['dependabot[bot]']
+  end
+
+  memoize \
+  def authors
+    `git log \
+      origin/master..$(git rev-parse --abbrev-ref --symbolic-full-name @{u}) \
+      --oneline --no-merges --format='%an'`.split("\n").uniq
+  end
+end
+
+class Runner::LoopRunner
+  extend Forwardable
+  extend Memoist
+
+  def_delegators(
+    :@runner,
+    :debug,
+    :expected_num_passed_checks,
+    :print_and_say,
+    :repo,
+  )
+
+  def initialize(runner:, start_time:)
+    @runner = runner
+    @start_time = start_time
+  end
+
+  def run_loop
+    if fail_exit_reason
+      print_and_say("Exiting because #{fail_exit_reason}.")
+      exit(1)
+    end
+
+    if num_passing_checks >= expected_num_passed_checks
+      puts("#{num_passing_checks}/#{expected_num_passed_checks} checks passed.")
+      print_and_say('Checks succeeded.')
+      exit(0)
+    else
+      debug(<<~LOG.squish)
+        #{num_passing_checks}/#{expected_num_passed_checks} checks passed.
+        Waiting for #{::Runner::RETRY_INTERVAL} seconds and then retrying.
+      LOG
+    end
+  end
+
+  memoize \
+  def fail_exit_reason
+    if Time.now - @start_time > ::Runner::MAX_TIME
+      return 'max time exceeded'
+    end
+
+    if checks_output.match?(/^(build|test|Ruby \d+\.\d+\.\d+)\s+fail/)
+      'tests failed'
+    end
+  end
+
+  memoize \
+  def num_passing_checks
+    checks_output.scan(/\spass\s/).size
+  end
+
+  memoize \
+  def checks_output
+    output =
+      `gh pr checks "#{ENV.fetch('GH_CHECKS_BRANCH', `git rev-parse --abbrev-ref HEAD`.rstrip)}"`
+    exit(1) if output.empty?
+    output
+  end
+end
+
+run_script = !ENV.key?('RUN_TESTS') && !(run_test_script = ENV.key?('RUN_TEST_SCRIPT'))
+if run_script
+  Runner.new.run
+elsif run_test_script
+  # run this with `RUN_TEST_SCRIPT=1 ruby /Users/david/Sync/bin/wait-for-gh-checks`
+  # loop_runner = Runner::LoopRunner.new(runner: nil, start_time: nil)
+  # pp(["loop_runner.checks_output", loop_runner.checks_output])
+  # puts(loop_runner.checks_output)
+else
+  # run tests with `cd /Users/david/Sync/bin/ && RUN_TESTS=1 ruby wait-for-gh-checks && cd -`
+  require 'bundler/inline'
+  gemfile do
+    source 'https://rubygems.org'
+    gem 'debug'
+    gem 'rspec'
+  end
+  require 'rspec/autorun'
+
+  RSpec.describe Runner do
+    subject(:runner) { Runner.new }
+
+    describe '#repo' do
+      subject(:repo) { runner.repo }
+
+      context 'when in the david_runger repo' do
+        before { expect(Dir).to receive(:pwd).and_return('/Users/david/workspace/david_runger') }
+
+        it 'returns "david_runger"' do
+          expect(repo).to eq('david_runger')
+        end
+      end
+    end
+  end
+
+  RSpec.describe Runner::LoopRunner do
+    subject(:loop_runner) { Runner::LoopRunner.new(runner:, start_time: Time.now) }
+
+    let(:runner) { Runner.new }
+
+    describe '#fail_exit_reason' do
+      subject(:fail_exit_reason) { loop_runner.fail_exit_reason }
+
+      context 'when the repo is "david_runger"' do
+        before { expect(runner).to receive(:repo).and_return('david_runger') }
+
+        context 'when the test output indicates that the test suite has failed' do
+          before do
+            expect(loop_runner).to receive(:checks_output).and_return(<<~OUTPUT)
+              test  fail  3m3s  https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096817061
+              deploy-and-prerender  skipping  0 https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096859848
+              percy/david_runger  pass  0 https://percy.io/David-Runger/david_runger/builds/21769344?utm_campaign=David-Runger&utm_content=david_runger&utm_source=github_status_private
+            OUTPUT
+          end
+
+          it 'returns "tests failed"' do
+            expect(fail_exit_reason).to eq('tests failed')
+          end
+        end
+      end
+    end
+
+    describe '#num_passing_checks' do
+      subject(:num_passing_checks) { loop_runner.num_passing_checks }
+
+      context 'when the test output indicates that there are 2 passing checks' do
+        before do
+          expect(loop_runner).to receive(:checks_output).and_return(<<~OUTPUT)
+            test  pass  3m3s  https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096817061
+            deploy-and-prerender  skipping  0 https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096859848
+            percy/david_runger  pass  0 https://percy.io/David-Runger/david_runger/builds/21769344?utm_campaign=David-Runger&utm_content=david_runger&utm_source=github_status_private
+          OUTPUT
+        end
+
+        it 'returns 2' do
+          expect(num_passing_checks).to eq(2)
+        end
+      end
+    end
+  end
+end
