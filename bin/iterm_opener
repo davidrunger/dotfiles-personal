@@ -18,10 +18,10 @@ if file_and_line.match?(GIT_SHA_REGEX)
   system(%(open -a Google\\ Chrome "https://github.com/hired/hired/commit/#{file_and_line}"))
 elsif system(%(file #{absolute_path} | grep -q "text"))
   # open with Sublime
-  system("~/Sync/bin/subl #{dir}/#{cleaned}")
+  system("~/workspace/dotfiles/bin/subl #{dir}/#{cleaned}")
 elsif system(%(file #{file} | grep -q "text"))
   # open with Sublime
-  system("~/Sync/bin/subl #{cleaned}")
+  system("~/workspace/dotfiles/bin/subl #{cleaned}")
 else
   # open with Chrome (or something else)
   system("/usr/bin/open #{file_and_line}")
