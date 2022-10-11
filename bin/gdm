@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+git fetch --no-tags --quiet origin master:master
+git checkout --quiet master &&
+  git branch --merged | egrep -v "(\*|master|safe)" | xargs -n 1 git branch -d &&
+  git checkout --quiet -
+git remote prune origin
