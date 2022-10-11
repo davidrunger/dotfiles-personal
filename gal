@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'slop'
+
+opts =
+  Slop.parse do |o|
+    o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
+    o.on('-h', '--help', 'view this help info') do
+      puts(
+        o.to_s.dup.
+          sub(%r{/Users/david/Sync/bin/}, '').
+          sub(%r{gal \[options\]}, 'gal <spec files to run> [options]'),
+      )
+      exit
+    end
+  end
+
+if opts.arguments.empty?
+  puts(opts.options.to_s)
+else
+  system(
+    {
+      'RUBYGEMS_GEMDEPS' => '', # this suppresses a warning from guard
+      'RSPEC_BACKTRACE' => opts.backtrace? ? '1' : nil,
+      'TARGET_SPEC_FILES' => opts.arguments.join(' '),
+    }.compact,
+    'guard -G /Users/david/Sync/guardfiles/run_spec.rb --no-bundler-warning',
+  )
+end
