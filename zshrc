@@ -2,11 +2,10 @@
 ####     Functions
 #############################
 
+# print absolute path of a file
 abs() { echo $(pwd)/$(ls $@ | sed "s|^\./||") }
 
-b() {
-  bundle install
-}
+b() { bundle install }
 
 build_ctags() {
   if [[ $BUILD_CTAGS == 'true' ]]
@@ -23,15 +22,15 @@ build_ctags() {
   fi
 }
 
+# create an alias
 cheat() { echo "alias $1='$2'" >> ~/.zshrc && source ~/.zshrc }
 
+# copy text to clipboard
 cpy() {
   TEXT=$(</dev/stdin)
   echo -n $TEXT | pbcopy
   echo "Text copied to clipboard:\n$TEXT"
 }
-
-dlm() { curl -o $2 $1 }
 
 gco() { git checkout $@ }
 
@@ -51,12 +50,18 @@ gfcob() {
   git fetch && git co -b $1 $BRANCH
 }
 
+# find file
 ff() { find . -type f -name $1 }
 
-patches() { git checkout patches && gform }
-
+# "git diff date"
+# shows the diff in code between the specified date and now
+# example usage:
+#   gddate 2022-10-01
 gddate() { git diff `git rev-list -1 --before=\"$1\" master`..origin/master }
 
+# show git diff in sublime
+# ex:
+#   gsd ae2b5a9c7c61597e34820694fed4612639274dba
 gsd() {
   git show $1 | EXT=diff tosubl
 }
@@ -69,6 +74,7 @@ check_git_push_safety() {
     return 1 # failure code
   fi
 
+  # don't push if there's still debugging code
   ag '^(\s*(fit|fdescribe|fcontext|fspecify|open_page))|(binding\.pry|byebug)' -iG '\.*(\.rake|\.rb|\.js|\.coffee|\.haml|\.html|\.erb)' --ignore script/ --ignore lib/middleware/set_config_sidekiq_middleware.rb
   if [ $? -eq 0 ]
   then
@@ -77,6 +83,7 @@ check_git_push_safety() {
     return 1
   fi
 
+  # don't push if there are still `!!!` markers in the code
   git diff origin/master..HEAD | rg -F '!!!' --quiet
   if [ $? -eq 0 ]
   then
@@ -84,9 +91,13 @@ check_git_push_safety() {
     echo "Easy there, cowboy! You still have some markers in your code."
     return 1
   fi
+
+  # if all of the above checks passed, we're good to push! :)
+  return 0
 }
 
-gpfoh() {
+# git push force
+gpf() {
   check_git_push_safety
   if [ $? -ne 0 ]
   then
@@ -96,10 +107,16 @@ gpfoh() {
   git push -fu origin HEAD
 }
 
-gpfohdangerous() {
+gpfoh() {
+  echo "Renamed to gpf"
+}
+
+# git push force without running `check_git_push_safety` first
+gpfdangerous() {
   git push -fu origin HEAD
 }
 
+# git update current commit with all uncommitted changes
 gup() {
   if [[ $(git rev-list --right-only --count master...HEAD) -eq 0 ]]
   then
@@ -112,11 +129,9 @@ gup() {
     GIT_SEQUENCE_EDITOR=: git rebase --interactive --autosquash HEAD~2
 }
 
-hprtest() {
-  OUTPUT=$(cat /Users/david/workspace/david_runger/personal/random.txt)
-  echo $OUTPUT | ruby /Users/david/workspace/david_runger/personal/ruby.rb
-}
-
+# Create a GitHub pull request.
+# It's `hpr` because that used to mean "hub pull request".
+# Now we are using `gh` rather than `hub`, but the name has stuck.
 hpr() {
   check_git_push_safety
   if [ $? -ne 0 ]
@@ -133,31 +148,33 @@ hpr() {
   echo $PR_CREATE_OUTPUT | open-gh-pr
 }
 
+# git rebase interactive
+# Enter the number of commits back that you want to go.
+# Ex: `gri 3` to rebase with the most recent 3 commits.
 gri() { git rebase -i HEAD~$1 && git status -sb }
 
+# git status
 gst() {
+  # switch upstream to master to get status relative to that
   git branch -u origin/master > /dev/null 2>&1
   git status -sb
+  # switch upstream back to current branch so `gh` can know which PR this branch is for
   git branch -u origin/$(git rev-parse --abbrev-ref HEAD) 1>/dev/null 2>&1
 }
 
-gsup() {
-  UPSTREAM_NAME=${${1:-master}//origin\/}
-  UPSTREAM=origin/$UPSTREAM_NAME
-  git branch --set-upstream-to=$UPSTREAM
-  git status -sb
-}
-
+# copy my IP address to clipboard
 myip() {
   curl -s ifconfig.co -4 | rg '\A\d+\.\d+\.\d+\.\d+\z' | cpy
 }
 
+# make directory and cd into it
 mcd() { mkdir $1 && cd $1; }
 
 # open rollbar occurrence page using Rollbar error UUID
 # Ex: `rb aaaaaaaa-bbbb-cccc-dddd-eeeeffffeeee`
 rb() { open -a Firefox "https://rollbar.com/occurrence/uuid/?uuid=$1" }
 
+# stop ruby and other processes
 rp() {
   spring stop && \
     sleep 0.5 && \
@@ -173,7 +190,7 @@ rp() {
 }
 
 # "sublime code" (open a GitHub repo in Sublime)
-# e.g. `$ sc https://github.com/plashchynski/crono`
+# ex: `sc https://github.com/plashchynski/crono`
 sc() {
   cd ~/Downloads
   git clone $1
@@ -182,6 +199,8 @@ sc() {
   cd -
 }
 
+# receive input from stdout and open it in sublime
+# ex: `git diff | tosubl`
 tosubl() {
   TMPDIR=${TMPDIR:-/tmp}  # default to /tmp if TMPDIR isn't set
   DATE="`date +%Y%m%d%H%M%S`"
@@ -193,6 +212,7 @@ tosubl() {
   # rm -f $F  # file will be deleted as soon as subl closes it. actually just leave it so it's easier to close sublime (no confirm dialog asking if we want to save or not.)
 }
 
+# open in sublime a file that is in the PATH
 wh() { $EDITOR $(which $1) }
 
 # Git stats on who wrote something, from log and blame. Works on a files or directories.
