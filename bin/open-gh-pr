@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'memoist'
+
+class Runner
+  extend Memoist
+
+  def initialize(create_pr_command_output)
+    @create_pr_command_output = create_pr_command_output
+  end
+
+  def open_pr
+    system("open -a Firefox #{pr_link}") if pr_link
+  end
+
+  memoize \
+  def pr_link
+    @create_pr_command_output[%r{https://github.com/davidrunger/.+/pull/\d+}]
+  end
+end
+
+# run tests with `cd /Users/david/Sync/bin/ && ruby open-gh-pr && cd -`
+receiving_piped_input = !STDIN.tty?
+if receiving_piped_input
+  Runner.new(ARGF.read).open_pr
+else
+  require 'bundler/inline'
+  gemfile do
+    source 'https://rubygems.org'
+    gem 'rspec'
+  end
+  require 'rspec/autorun'
+
+  RSpec.describe Runner do
+    subject(:runner) { Runner.new(create_pr_command_output) }
+
+    describe '#pr_link' do
+      subject(:pr_link) { runner.pr_link }
+
+      context 'when the output includes a PR link' do
+        let(:create_pr_command_output) do
+          'content https://github.com/davidrunger/runger_style/pull/198 more content'
+        end
+
+        it 'returns the PR link' do
+          expect(pr_link).to eq('https://github.com/davidrunger/runger_style/pull/198')
+        end
+      end
+
+      context 'when the output does not include a PR link' do
+        let(:create_pr_command_output) do
+          'All cruelty springs from weakness.'
+        end
+
+        it 'returns nil' do
+          expect(pr_link).to eq(nil)
+        end
+      end
+    end
+  end
+end
