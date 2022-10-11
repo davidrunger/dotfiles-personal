@@ -3,21 +3,27 @@
 
 require 'slop'
 
+module Gal
+  def self.print_options(options)
+    puts(
+      options.to_s.dup.
+        sub(%r{/Users/david/workspace/dotfiles/bin/}, '').
+        sub(%r{gal \[options\]}, 'gal <spec files to run> [options]'),
+    )
+  end
+end
+
 opts =
   Slop.parse do |o|
     o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
     o.on('-h', '--help', 'view this help info') do
-      puts(
-        o.to_s.dup.
-          sub(%r{/Users/david/Sync/bin/}, '').
-          sub(%r{gal \[options\]}, 'gal <spec files to run> [options]'),
-      )
+      Gal.print_options(o)
       exit
     end
   end
 
 if opts.arguments.empty?
-  puts(opts.options.to_s)
+  Gal.print_options(opts.options)
 else
   system(
     {
