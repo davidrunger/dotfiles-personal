@@ -25,6 +25,6 @@ else
       'RSPEC_BACKTRACE' => opts.backtrace? ? '1' : nil,
       'TARGET_SPEC_FILES' => opts.arguments.join(' '),
     }.compact,
-    'guard -G /Users/david/Sync/guardfiles/run_spec.rb --no-bundler-warning',
+    'guard -G /Users/david/workspace/dotfiles/guardfiles/run_spec.rb --no-bundler-warning',
   )
 end
