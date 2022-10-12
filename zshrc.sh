@@ -285,6 +285,7 @@ alias nvm="unalias nvm; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@"
 
 # less options
 export LESS='-Rj6 -X --quit-if-one-screen'
+export LESSHISTFILE=- # don't store less search history https://web.archive.org/web/20141129223918/http://linuxcommand.org/man_pages/less1.html
 
 #############################
 ####     Aliases
