@@ -131,10 +131,7 @@ class Runner::LoopRunner
 
   memoize \
   def checks_output
-    output =
-      `gh pr checks "#{ENV.fetch('GH_CHECKS_BRANCH', `git rev-parse --abbrev-ref HEAD`.rstrip)}"`
-    exit(1) if output.empty?
-    output
+    %x(gh pr checks "#{ENV.fetch('GH_CHECKS_BRANCH', `git rev-parse --abbrev-ref HEAD`.rstrip)}")
   end
 end
 
