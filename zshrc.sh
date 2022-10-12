@@ -139,7 +139,7 @@ hpr() {
     return 1
   fi
 
-  gpfoh
+  gpf
   PR_CREATE_OUTPUT=$(gh pr create \
     --title "$(git log -1 --format=%s)" \
     --body "$(git log -1 --format=%b | ruby -r active_support/core_ext/string/filters -e 'puts(ARGF.read.split(/\n\n+/).map(&:squish).join("\n\n").strip)')"
