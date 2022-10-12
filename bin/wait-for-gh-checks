@@ -45,10 +45,14 @@ class Runner
     when 'david_runger'
       dependabot_branch? ? 3 : 4
     when 'fcom' then 1
+    when 'living_document' then 3
     when 'pallets' then 1
+    when 'release_assistant' then 1
+    when 'rspec_performance_summary' then 1
+    when 'runger_style' then 1
     when 'schedjewel' then 3
     when 'skedjewel' then 1
-    when 'shaped' then 1
+    when 'shaped' then 3
     when 'simple_cov-formatter-terminal' then 3
     else fail("Unknown #expected_num_passed_checks for repo '#{repo}'!")
     end
