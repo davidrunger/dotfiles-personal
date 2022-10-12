@@ -66,6 +66,13 @@ gsd() {
   git show $1 | EXT=diff tosubl
 }
 
+gsup() {
+  UPSTREAM_NAME=${${1:-master}//origin\/}
+  UPSTREAM=origin/$UPSTREAM_NAME
+  git branch --set-upstream-to=$UPSTREAM
+  git status -sb
+}
+
 check_git_push_safety() {
   # don't push if branch name is "safe" or "master"
   if [[ $(git rev-parse --abbrev-ref HEAD) =~ ^(safe|master)$ ]]
