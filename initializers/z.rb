@@ -146,10 +146,6 @@ if ::Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
   ::Rails.logger.extend(::ActiveSupport::Logger.broadcast(logger))
 end
 
-def long_skip! ;
-  $stop_skipping_at = 20.seconds.from_now ;
-end
-
 def skip_for!(seconds) ;
   $stop_skipping_at = seconds.seconds.from_now ;
 end
