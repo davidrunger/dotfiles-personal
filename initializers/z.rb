@@ -102,7 +102,6 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
     $runger_expensive_queries[time] = [
       "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}",
       david_runger_caller_lines_until_logging,
-      time,
     ]
   end
 
@@ -118,6 +117,25 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
     puts
     puts "#{'*' * 50}\n"
   end
+end
+
+ActiveSupport::Notifications.subscribe('process_action.action_controller') do |*args|
+  next unless Runger.config.log_expensive_queries?
+
+  payload = args.extract_options!
+
+  controller_name = payload[:controller]
+  next if controller_name == 'AnonymousController' # this occurs in tests
+
+  puts("\nMost expensive queries:")
+  $runger_expensive_queries.sort.last(3).each do |time, (query, backtrace)|
+    puts("#{time.round(3).to_s.red} seconds")
+    puts(query.blue)
+    puts(backtrace.map(&:yellow))
+    puts
+  end
+
+  $runger_expensive_queries = {}
 end
 
 if ::Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
