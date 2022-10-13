@@ -189,20 +189,17 @@ if Rails.env.test?
     prepend RungerPatches
   end
 
-  # Needs to be updated for whatever version of RSpec I'm on, I'm guessing. Raises error during boot
-  # currently.
-  #
-  # class RSpec::Core::Metadata::HashPopulator
-  #   private
+  class RSpec::Core::Metadata::HashPopulator
+    private
 
-  #   def description_separator(parent_part, child_part)
-  #     if parent_part.is_a?(Module) && child_part =~ /^(#|::|\.)/
-  #       ''.freeze
-  #     else
-  #       ' / '.freeze
-  #     end
-  #   end
-  # end
+    def description_separator(parent_part, child_part)
+      if parent_part.is_a?(Module) && child_part =~ /^(#|::|\.)/
+        ''
+      else
+        ' / '
+      end
+    end
+  end
 end
 
 class Rollbar::Notifier
