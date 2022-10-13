@@ -16,6 +16,7 @@ end
 opts =
   Slop.parse do |o|
     o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
+    o.bool('-s', '--skip-spring', 'do not use spring')
     o.on('-h', '--help', 'view this help info') do
       Gal.print_options(o)
       exit
@@ -30,6 +31,7 @@ else
       'RUBYGEMS_GEMDEPS' => '', # this suppresses a warning from guard
       'RSPEC_BACKTRACE' => opts.backtrace? ? '1' : nil,
       'TARGET_SPEC_FILES' => opts.arguments.join(' '),
+      'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', opts.skip_spring? ? '1' : nil),
     }.compact,
     'guard -G /Users/david/workspace/dotfiles/guardfiles/run_spec.rb --no-bundler-warning',
   )
