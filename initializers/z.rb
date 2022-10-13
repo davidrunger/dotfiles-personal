@@ -115,7 +115,6 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
     puts
     puts('^ the above query was triggered by the below stack trace \/')
     puts
-    # puts caller
     puts(david_runger_caller_lines_until_logging.map(&:yellow))
     puts
     puts("#{'*' * 50}\n")
