@@ -19,12 +19,15 @@ class Runger::RungerConfig
 
   CONFIG_KEYS.each do |config_key|
     define_method("#{config_key}?") do
-      memoize_settings_from_redis
+      unless $runger_config_last_memoized_at && $runger_config_last_memoized_at >= 1.second.ago
+        memoize_settings_from_redis
+      end
       instance_variable_get("@#{config_key}")
     end
   end
 
   def memoize_settings_from_redis
+    $runger_config_last_memoized_at = Time.current
     CONFIG_KEYS.each do |config_key|
       instance_variable_set("@#{config_key}", setting_in_redis(config_key))
     end
