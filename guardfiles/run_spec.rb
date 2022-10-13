@@ -9,7 +9,6 @@ class RspecPrefixer
 
   memoize \
   def rspec_prefix
-    pp(["ENV.fetch('DISABLE_SPRING', nil)", ENV.fetch('DISABLE_SPRING', nil)])
     if project_uses_spring? && ENV.fetch('DISABLE_SPRING', nil) != '1'
       'spring '
     else
