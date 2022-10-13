@@ -78,45 +78,42 @@ Runger::RungerConfig::CONFIG_KEYS.each do |runger_config_key|
   end
 end
 
-# rubocop:disable Layout/LineLength
-# ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, finish, _id, payload|
-#   if (
-#     (Runger.config.log_expensive_queries? && defined?(Rails::Server)) ||
-#       Runger.config.log_ar_trace?
-#   )
-#     david_runger_caller_lines =
-#       caller.select { |filename| filename.include?('/david_runger/') }.presence || caller
-#     david_runger_caller_lines_until_logging =
-#       david_runger_caller_lines.
-#         take_while { |line| line.exclude?('config/initializers/logging.rb') }.
-#         presence || david_runger_caller_lines
-#   end
+ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, finish, _id, payload|
+  log_expensive_queries = Runger.config.log_expensive_queries? && defined?(Rails::Server)
+  log_ar_trace = Runger.config.log_ar_trace?
 
-#   if Runger.config.log_expensive_queries? && defined?(Rails::Server)
-#     time = finish - start
-#     $runger_expensive_queries ||= {}
-#     $runger_expensive_queries[time] = [
-#       "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}",
-#       david_runger_caller_lines_until_logging,
-#       time,
-#     ]
-#   end
+  if log_expensive_queries || log_ar_trace
+    david_runger_caller_lines =
+      caller.select { |filename| filename.include?('/david_runger/') }.presence || caller
+    david_runger_caller_lines_until_logging =
+      david_runger_caller_lines.
+        take_while { |line| line.exclude?('config/initializers/z.rb') }.
+        presence || david_runger_caller_lines
+  end
 
-#   # log_ar_trace!
-#   if Runger.config.log_ar_trace?
-#     puts
-#     puts "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}"
-#     # puts "#{finish - start} sec"
-#     puts
-#     puts '^ the above query was triggered by the below stack trace \/'
-#     puts
-#     # puts caller
-#     puts david_runger_caller_lines_until_logging
-#     puts
-#     puts "#{'*' * 50}\n"
-#   end
-# end
-# rubocop:enable Layout/LineLength
+  if log_expensive_queries
+    time = finish - start
+    $runger_expensive_queries ||= {}
+    $runger_expensive_queries[time] = [
+      "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}",
+      david_runger_caller_lines_until_logging,
+      time,
+    ]
+  end
+
+  if log_ar_trace
+    puts
+    puts "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}"
+    # puts "#{finish - start} sec"
+    puts
+    puts '^ the above query was triggered by the below stack trace \/'
+    puts
+    # puts caller
+    puts david_runger_caller_lines_until_logging
+    puts
+    puts "#{'*' * 50}\n"
+  end
+end
 
 if ::Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
   puts('setting Sidekiq logging to aggressive mode')
