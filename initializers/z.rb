@@ -110,15 +110,15 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
 
   if log_ar_trace
     puts
-    puts "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}"
-    # puts "#{finish - start} sec"
+    puts("#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}".blue)
+    puts("#{(finish - start).round(3).to_s.red} sec")
     puts
-    puts '^ the above query was triggered by the below stack trace \/'
+    puts('^ the above query was triggered by the below stack trace \/')
     puts
     # puts caller
-    puts david_runger_caller_lines_until_logging
+    puts(david_runger_caller_lines_until_logging.map(&:yellow))
     puts
-    puts "#{'*' * 50}\n"
+    puts("#{'*' * 50}\n")
   end
 end
 
