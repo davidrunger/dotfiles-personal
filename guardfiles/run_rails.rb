@@ -14,6 +14,6 @@ guard(:shell, all_on_start: true) do
     rescue => error
       pp(error)
     end
-    puts("Ran at #{Time.now}")
+    puts("Ran at #{Time.current}")
   end
 end
