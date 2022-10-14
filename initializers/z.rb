@@ -39,8 +39,9 @@ class Runger::RungerConfig
     JSON($runger_redis.get(setting_name) || 'false')
   end
 
-  def set_in_redis(key, value)
+  def set_in_redis(key, value, clear_memo: false)
     $runger_redis.set(key, value)
+    $runger_config_last_memoized_at = nil if clear_memo
     true
   end
 
@@ -85,6 +86,15 @@ Runger::RungerConfig::CONFIG_KEYS.each do |runger_config_key|
     Runger.config.set_in_redis(runger_config_key, false)
     show_runger_config
     true
+  end
+
+  define_method("with_#{runger_config_key}") do |&block|
+    original_value = Runger.config.setting_in_redis(runger_config_key)
+    Runger.config.set_in_redis(runger_config_key, true, clear_memo: true)
+
+    block.call
+
+    Runger.config.set_in_redis(runger_config_key, original_value, clear_memo: true)
   end
 end
 
