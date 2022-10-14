@@ -93,7 +93,7 @@ Runger::RungerConfig::CONFIG_KEYS.each do |runger_config_key|
     Runger.config.set_in_redis(runger_config_key, true, clear_memo: true)
 
     block.call
-
+  ensure
     Runger.config.set_in_redis(runger_config_key, original_value, clear_memo: true)
   end
 end
