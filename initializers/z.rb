@@ -6,8 +6,10 @@ module Runger
 end
 
 # Flipper features to always enable (since Flipper features sometimes get cleared by flushing Redis)
-%w[disable_prerendering].each do |feature|
-  Flipper.enable(feature)
+if Rails.env.development?
+  %i[disable_prerendering].each do |feature|
+    Flipper.enable(feature)
+  end
 end
 
 $runger_redis = Redis.new(db: 2)
