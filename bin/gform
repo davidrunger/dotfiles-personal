@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-git fetch --no-tags --quiet origin && git fetch --no-tags --quiet origin master:master && git rebase origin/master
-git status -sb

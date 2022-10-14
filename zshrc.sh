@@ -50,6 +50,11 @@ gfcob() {
   git fetch && git co -b $1 $BRANCH
 }
 
+gform() {
+  git fetch --no-tags --quiet origin && git fetch --no-tags --quiet origin master:master && git rebase origin/master
+  gst
+}
+
 # find file
 ff() { find . -type f -name $1 }
 
