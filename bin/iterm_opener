@@ -10,6 +10,7 @@ cleaned.sub!(%r{\A(a/|b/)}, '')
 file = cleaned.split(':').first
 absolute_path = "#{dir}/#{file}"
 
+# rubocop:disable Style/TopLevelMethodDefinition
 def debug(message)
   File.write(
     '/Users/david/Downloads/' \
@@ -17,6 +18,7 @@ def debug(message)
     message,
   )
 end
+# rubocop:enable Style/TopLevelMethodDefinition
 
 # debug(<<~LOG)
 #   #{file_and_line}
