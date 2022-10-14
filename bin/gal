@@ -17,6 +17,7 @@ opts =
   Slop.parse do |o|
     o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
     o.bool('-s', '--skip-spring', 'do not use spring')
+    o.bool('-c', '--force-coverage-detail', 'print code coverage info even if 100% covered')
     o.on('-h', '--help', 'view this help info') do
       Gal.print_options(o)
       exit
@@ -32,6 +33,7 @@ else
       'RSPEC_BACKTRACE' => opts.backtrace? ? '1' : nil,
       'TARGET_SPEC_FILES' => opts.arguments.join(' '),
       'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', opts.skip_spring? ? '1' : nil),
+      'SIMPLECOV_FORCE_DETAILS' => opts.force_coverage_detail? ? '1' : nil,
     }.compact,
     'guard -G /Users/david/workspace/dotfiles/guardfiles/run_spec.rb --no-bundler-warning',
   )
