@@ -373,7 +373,7 @@ alias s='subl && sleep 0.1 && subl'
 alias safe='git checkout safe && gform'
 alias say='say -v Rishi'
 alias sd='subl ~/workspace/david_runger'
-alias sdm='safe && gdm'
+alias sdm='safe; gdm'
 alias sha='git log master --format=format:%H | head -n 1 | cut -c1-7 | cpy'
 alias sk="bin/sidekiq"
 alias sn='subl ~/Sync/notes'
