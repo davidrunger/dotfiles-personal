@@ -10,7 +10,25 @@ cleaned.sub!(%r{\A(a/|b/)}, '')
 file = cleaned.split(':').first
 absolute_path = "#{dir}/#{file}"
 
-if file_and_line.match?(GIT_SHA_REGEX)
+def debug(message)
+  File.write(
+    '/Users/david/Downloads/' \
+      "iterm_opener-debug-#{Time.now.strftime('%Y-%m-%dT%H:%M:%S.%L%z')}.txt",
+    message,
+  )
+end
+
+# debug(<<~LOG)
+#   #{file_and_line}
+#   #{absolute_path}
+#   #{dir}/#{cleaned}
+# LOG
+
+if file_and_line.match?(/\A:::\d{1,4}\z/) && File.exist?("#{dir}/.simplecov_target")
+  target = File.read("#{dir}/.simplecov_target").rstrip
+  # open with Sublime
+  system("~/workspace/dotfiles/bin/subl #{dir}/#{target}:#{file_and_line.sub(':::', '')}")
+elsif file_and_line.match?(GIT_SHA_REGEX)
   # open with Chrome
   system(%(open -a Firefox "https://github.com/davidrunger/david_runger/commit/#{file_and_line}"))
 elsif system(%(file #{absolute_path} | grep -q "text"))
