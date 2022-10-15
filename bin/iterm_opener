@@ -26,8 +26,11 @@ end
 #   #{dir}/#{cleaned}
 # LOG
 
-if file_and_line.match?(/\A:::\d{1,4}\z/) && File.exist?("#{dir}/.simplecov_target")
-  target = File.read("#{dir}/.simplecov_target").rstrip
+if (
+  file_and_line.match?(/\A:::\d{1,4}\z/) &&
+    File.exist?((file_location = "#{dir}/tmp/simple_cov/formatter/terminal/target.txt"))
+)
+  target = File.read(file_location).rstrip
   # open with Sublime
   system("~/workspace/dotfiles/bin/subl #{dir}/#{target}:#{file_and_line.sub(':::', '')}")
 elsif file_and_line.match?(GIT_SHA_REGEX)
