@@ -359,6 +359,7 @@ alias gsl='git show -s --format=%s'
 alias gstash='git stash --include-untracked --keep-index'
 alias gunstage='git reset HEAD'
 alias gunstash='git stash apply'
+alias hwm='hpr && wm'
 alias md='mkdir -p'
 alias np="rg --files-with-matches 'binding\\.pry' | xargs sed -i '' -e '/binding\\.pry/d'"
 alias pspq='psql david_runger_development < personal/sql.sql'
