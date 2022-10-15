@@ -30,7 +30,6 @@ guard(:shell, all_on_start: true) do
   ignore(%r{
     ^(
     .byebug_history|
-    .simplecov_target|
     .bundle/
     .github/
     coverage/|
