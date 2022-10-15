@@ -27,6 +27,21 @@ end
 rspec_prefixer = RspecPrefixer.new
 
 guard(:shell, all_on_start: true) do
+  ignore(%r{
+    ^(
+    .byebug_history|
+    .simplecov_target|
+    .bundle/
+    .github/
+    coverage/|
+    db/|
+    log/|
+    node_modules/|
+    personal/|
+    tmp/
+    )
+  }x)
+
   watch(%r{
    ^(
    app/|
