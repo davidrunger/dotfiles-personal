@@ -165,10 +165,6 @@ def d ;
   system('clear') ;
 end
 
-def ume
-  User.find(1)
-end
-
 module FixtureBuilder
   class Builder
     module RungerPatches
