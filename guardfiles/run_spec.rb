@@ -64,6 +64,8 @@ guard(:shell, all_on_start: true) do
       puts(error.backtrace)
     end
 
-    "Done in #{(Time.now - start_time).round(2)} seconds." # rubocop:disable Rails/TimeZone
+    # rubocop:disable Rails/TimeZone, Lint/RedundantCopDisableDirective
+    "Done in #{(Time.now - start_time).round(2)} seconds."
+    # rubocop:enable Rails/TimeZone, Lint/RedundantCopDisableDirective
   end
 end
