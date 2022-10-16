@@ -392,6 +392,7 @@ alias gunstage='git reset HEAD'
 alias gunstash='git stash apply'
 alias hwm='hpr && wm'
 alias md='mkdir -p'
+alias most='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.most.dev'
 alias np="rg --files-with-matches 'binding\\.pry' | xargs sed -i '' -e '/binding\\.pry/d'"
 alias pspq='psql david_runger_development < personal/sql.sql'
 alias rc="DISABLE_SPRING=1 IS_RAILS_CONSOLE=1 bin/rails console"
