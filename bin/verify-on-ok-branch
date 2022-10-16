@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# commits to master are allowed for dotfiles
+if [[ $PWD == "/Users/david/workspace/dotfiles" ]]
+then
+  exit 0
+fi
+
+if [[ $(git rev-parse --abbrev-ref HEAD) =~ ^(safe|master)$ ]]
+then
+  echo "Change your branch name, silly!"
+  exit 1 # failure code
+fi

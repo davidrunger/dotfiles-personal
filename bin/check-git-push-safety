@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+verify-on-ok-branch
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+# don't push if there's still debugging code
+ag '^(\s*(fit|fdescribe|fcontext|fspecify|open_page))|(binding\.pry|byebug)' -iG '\.*(\.rake|\.rb|\.js|\.coffee|\.haml|\.html|\.erb)' --ignore script/ --ignore lib/middleware/set_config_sidekiq_middleware.rb
+if [ $? -eq 0 ]
+then
+  echo
+  echo "Easy there, cowboy! Cleanup yo code, first."
+  exit 1
+fi
+
+# don't push if there are still `!!!` markers in the code
+git diff origin/master..HEAD | rg -F '!!!' --quiet
+if [ $? -eq 0 ]
+then
+  git diff --name-status master | cut -f2 | xargs rg -F '!!!'
+  echo "Easy there, cowboy! You still have some markers in your code."
+  exit 1
+fi
+
+# if all of the above checks passed, we're good to push! :)
+exit 0

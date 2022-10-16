@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# "git push force"
+
+check-git-push-safety
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+git push -fu origin HEAD

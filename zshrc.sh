@@ -78,51 +78,8 @@ gsup() {
   git status -sb
 }
 
-verify_on_ok_branch() {
-  # commits to master are allowed for dotfiles
-  if [[ $PWD == "/Users/david/workspace/dotfiles" ]]
-  then
-    return 0
-  fi
-
-  if [[ $(git rev-parse --abbrev-ref HEAD) =~ ^(safe|master)$ ]]
-  then
-    echo "Change your branch name, silly!"
-    return 1 # failure code
-  fi
-}
-
-check_git_push_safety() {
-  verify_on_ok_branch
-  if [ $? -ne 0 ]
-  then
-    return 1
-  fi
-
-  # don't push if there's still debugging code
-  ag '^(\s*(fit|fdescribe|fcontext|fspecify|open_page))|(binding\.pry|byebug)' -iG '\.*(\.rake|\.rb|\.js|\.coffee|\.haml|\.html|\.erb)' --ignore script/ --ignore lib/middleware/set_config_sidekiq_middleware.rb
-  if [ $? -eq 0 ]
-  then
-    echo
-    echo "Easy there, cowboy! Cleanup yo code, first."
-    return 1
-  fi
-
-  # don't push if there are still `!!!` markers in the code
-  git diff origin/master..HEAD | rg -F '!!!' --quiet
-  if [ $? -eq 0 ]
-  then
-    git diff --name-status master | cut -f2 | xargs rg -F '!!!'
-    echo "Easy there, cowboy! You still have some markers in your code."
-    return 1
-  fi
-
-  # if all of the above checks passed, we're good to push! :)
-  return 0
-}
-
 gcom() {
-  verify_on_ok_branch
+  verify-on-ok-branch
   if [ $? -ne 0 ]
   then
     return 1
@@ -132,7 +89,7 @@ gcom() {
 }
 
 gcomm() {
-  verify_on_ok_branch
+  verify-on-ok-branch
   if [ $? -ne 0 ]
   then
     return 1
@@ -141,22 +98,11 @@ gcomm() {
   git commit -m
 }
 
-# git push force
-gpf() {
-  check_git_push_safety
-  if [ $? -ne 0 ]
-  then
-    return 1
-  fi
-
-  git push -fu origin HEAD
-}
-
 gpfoh() {
   echo "Renamed to gpf"
 }
 
-# git push force without running `check_git_push_safety` first
+# git push force without running `check-git-push-safety` first
 gpfdangerous() {
   git push -fu origin HEAD
 }
@@ -174,24 +120,6 @@ gup() {
     GIT_SEQUENCE_EDITOR=: git rebase --interactive --autosquash HEAD~2
 }
 
-# Create a GitHub pull request.
-# It's `hpr` because that used to mean "hub pull request".
-# Now we are using `gh` rather than `hub`, but the name has stuck.
-hpr() {
-  check_git_push_safety
-  if [ $? -ne 0 ]
-  then
-    return 1
-  fi
-
-  gpf
-  PR_CREATE_OUTPUT=$(gh pr create \
-    --title "$(git log -1 --format=%s)" \
-    --body "$(git log -1 --format=%b | ruby -r active_support/core_ext/string/filters -e 'puts(ARGF.read.split(/\n\n+/).map(&:squish).join("\n\n").strip)')"
-  )
-  echo $PR_CREATE_OUTPUT
-  echo $PR_CREATE_OUTPUT | open-gh-pr
-}
 
 # git rebase interactive
 # Enter the number of commits back that you want to go.
