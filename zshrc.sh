@@ -338,7 +338,7 @@ export SIMPLECOV_WRITE_TARGET_TO_FILE=1
 #############################
 ####     Aliases
 #############################
-alias all='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.multi.dev'
+alias all='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.all.dev'
 alias bat='bat --paging=never'
 alias br='bin/rubocop'
 alias build='subl ~/workspace/dotfiles/personal/bin/sublime-build.sh'
