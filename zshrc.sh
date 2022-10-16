@@ -78,12 +78,25 @@ gsup() {
   git status -sb
 }
 
-check_git_push_safety() {
-  # don't push if branch name is "safe" or "master"
+verify_on_ok_branch() {
+  # commits to master are allowed for dotfiles
+  if [[ $PWD == "/Users/david/workspace/dotfiles" ]]
+  then
+    return 0
+  fi
+
   if [[ $(git rev-parse --abbrev-ref HEAD) =~ ^(safe|master)$ ]]
   then
     echo "Change your branch name, silly!"
     return 1 # failure code
+  fi
+}
+
+check_git_push_safety() {
+  verify_on_ok_branch
+  if [ $? -ne 0 ]
+  then
+    return 1
   fi
 
   # don't push if there's still debugging code
@@ -106,6 +119,26 @@ check_git_push_safety() {
 
   # if all of the above checks passed, we're good to push! :)
   return 0
+}
+
+gcom() {
+  verify_on_ok_branch
+  if [ $? -ne 0 ]
+  then
+    return 1
+  fi
+
+  git commit --verbose
+}
+
+gcomm() {
+  verify_on_ok_branch
+  if [ $? -ne 0 ]
+  then
+    return 1
+  fi
+
+  git commit -m
 }
 
 # git push force
@@ -331,9 +364,7 @@ alias gbdf='git branch -D $(git for-each-ref --format="%(refname:short)" refs/he
 alias gbm='git branch -m'
 alias gc='git checkout $(git for-each-ref --format="%(refname:short)" refs/heads | rg -v "^(master|safe|$(git rev-parse --abbrev-ref HEAD))$" | fzf)'
 alias gclean='git checkout . && git clean -f'
-alias gcom='git commit --verbose'
 alias gcoma='git commit --amend -v'
-alias gcomm='git commit -m'
 alias gcoom='git checkout origin/master'
 alias gcp='git cherry-pick'
 alias gcpf='git cherry-pick $(git for-each-ref --format="%(refname:short)" refs/heads | rg -v "^(master|safe|$(git rev-parse --abbrev-ref HEAD))$" | fzf)'
