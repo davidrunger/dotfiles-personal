@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative '../utils/ruby/copy_utils.rb'
+
+require 'memoist'
+
+class Authenticator
+  extend Memoist
+  include CopyUtils
+
+  def copy_auth_code_to_clipboard
+    if backup_codes_exist?
+      cpp(auth_code)
+    else
+      puts("First, save backup codes at #{backup_codes_path} !".red)
+    end
+  end
+
+  # private
+
+  memoize \
+  def backup_codes_exist?
+    File.exist?(backup_codes_path)
+  end
+
+  memoize \
+  def backup_codes_path
+    "/Users/david/Sync/notes/backup-codes/#{service}.txt"
+  end
+
+  memoize \
+  def auth_code
+    `oathtool --totp -b "#{auth_secret}"`.rstrip
+  end
+
+  memoize \
+  def auth_secret
+    File.read(auth_secret_path).rstrip
+  end
+
+  memoize \
+  def auth_secret_path
+    "/Users/david/Sync/notes/auth-codes/#{service}.txt"
+  end
+
+  memoize \
+  def service
+    ARGV.first.downcase
+  end
+end
+
+Authenticator.new.copy_auth_code_to_clipboard
