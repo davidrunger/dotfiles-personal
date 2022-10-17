@@ -248,14 +248,31 @@ class Rollbar::Notifier
       error_class, error_message =
         item.build_data.dig(:body, :trace, :exception).presence&.values_at(:class, :message)
 
-      case
-      when exception.present?
-        ([exception.inspect.public_send(color(level))] + (exception.backtrace || [])).join("\n")
-      when error_class.present? && error_message.present?
-        "#{error_class}: #{error_message}"
-      else
-        message || 'NO MESSAGE'
+      header =
+        case
+        when exception.present?
+          exception.inspect
+        when error_class.present? && error_message.present?
+          "#{error_class}: #{error_message}"
+        else
+          message || 'NO MESSAGE'
+        end
+
+      if extra.present?
+        header << "\n#{extra}"
       end
+
+      if context.present?
+        header << "\n#{context}"
+      end
+
+      message = header.public_send(color(level))
+
+      if exception.present?
+        message << "\n#{(exception.backtrace || []).join("\n")}"
+      end
+
+      message
     end
 
     def log(level, *args)
