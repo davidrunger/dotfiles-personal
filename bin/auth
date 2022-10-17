@@ -30,7 +30,7 @@ class Authenticator
 
   memoize \
   def backup_codes_path
-    "/Users/david/Sync/notes/backup-codes/#{service}.txt"
+    "/Users/david/Documents/backup-codes/#{service}.txt"
   end
 
   memoize \
