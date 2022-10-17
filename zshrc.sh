@@ -95,7 +95,7 @@ gcomm() {
     return 1
   fi
 
-  git commit -m
+  git commit -m $1
 }
 
 gpfoh() {
