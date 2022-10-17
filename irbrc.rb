@@ -20,7 +20,7 @@ class Method
   end
 
   def s
-    return nil if sl.blank?
+    return nil if sl.nil? || sl.empty?
 
     subl(sl)
   end
