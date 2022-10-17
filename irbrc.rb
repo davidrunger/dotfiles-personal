@@ -4,7 +4,7 @@
 # because, if IRB does automatically load it, then IRB doesn't respect project-local settings.
 # Instead, create a project-local `.irbrc` file, and in it put `load '/Users/david/.irbrc.rb'`.
 
-require_relative './utils-ruby/copy_utils.rb'
+require_relative './utils/ruby/copy_utils.rb'
 
 def skip!
   $stop_skipping_at = Time.at(Integer(Time.now) + 5)
