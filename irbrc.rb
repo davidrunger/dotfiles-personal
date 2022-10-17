@@ -4,6 +4,8 @@
 # because, if IRB does automatically load it, then IRB doesn't respect project-local settings.
 # Instead, create a project-local `.irbrc` file, and in it put `load '/Users/david/.irbrc.rb'`.
 
+require_relative './utils-ruby/copy_utils.rb'
+
 def skip!
   $stop_skipping_at = Time.at(Integer(Time.now) + 5)
 end
@@ -28,18 +30,8 @@ class Object
   def m(method_name)
     method(method_name)
   end
-
-  def cpp(input = nil)
-    str = (input || self).to_s
-    IO.popen('pbcopy', 'w') { |f| f << str }
-    if str.size < 100
-      puts("Copied '#{str}' to clipboard.".green)
-    else
-      puts("Copied #{str.size} characters to clipboard.".green)
-    end
-    true
-  end
 end
+Object.prepend(CopyUtils)
 
 class Time
   def cppa
