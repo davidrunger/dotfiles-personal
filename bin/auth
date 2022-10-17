@@ -9,8 +9,12 @@ class Authenticator
   extend Memoist
   include CopyUtils
 
+  BACKUP_CODES_NOT_REQUIRED_SERVICES = [
+    'aws', # It seems Amazon doesn't provide backup codes. https://webapps.stackexchange.com/questions/57422/can-i-generate-backup-codes-for-aws-multi-factor-authentication-mfa
+  ].freeze
+
   def copy_auth_code_to_clipboard
-    if backup_codes_exist?
+    if backup_codes_exist? || BACKUP_CODES_NOT_REQUIRED_SERVICES.include?(service)
       cpp(auth_code)
     else
       puts("First, save backup codes at #{backup_codes_path} !".red)
