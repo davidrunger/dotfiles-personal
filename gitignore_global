@@ -1,0 +1,33 @@
+# Editor Droppings #
+####################
+.idea
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Tag files produced by exuberant ctags / other ctags stuff #
+TAGS
+!TAGS/
+tags
+!tags/
+!tags/
+.tags
+.tags_sorted_by_file
+.gemtags
+
+# commits to ignore in `git blame`
+# (https://www.moxio.com/blog/43/ignoring-bulk-change-commits-with-git-blame)
+.git-blame-ignore-revs
+
+.env
+.fcom.yml
+personal/
+config/initializers/z.rb
+Procfile.all.dev
+Procfile.most.dev
+Procfile.web.dev
