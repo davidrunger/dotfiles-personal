@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# commits to master are allowed for dotfiles
-if [[ $PWD == "/Users/david/workspace/dotfiles" ]]
+# commits to master are allowed for some projects
+if [[ $PWD == "/Users/david/workspace/dotfiles" || $PWD == "/Users/david/Sync/bin" ]]
 then
   exit 0
 fi
