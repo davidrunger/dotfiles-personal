@@ -10,10 +10,6 @@ def skip!
   $stop_skipping_at = Time.at(Integer(Time.now) + 5)
 end
 
-def subl(filename = nil)
-  system("subl #{filename}")
-end
-
 class Method
   def sl
     source_location&.map(&:to_s)&.join(':')
@@ -22,7 +18,7 @@ class Method
   def s
     return nil if sl.nil? || sl.empty?
 
-    subl(sl)
+    system("subl #{sl}")
   end
 end
 
