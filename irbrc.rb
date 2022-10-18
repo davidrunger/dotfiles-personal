@@ -6,9 +6,11 @@
 
 require_relative './utils/ruby/copy_utils.rb'
 
+# rubocop:disable Style/TopLevelMethodDefinition
 def skip!
   $stop_skipping_at = Time.at(Integer(Time.now) + 5)
 end
+# rubocop:enable Style/TopLevelMethodDefinition
 
 class Method
   def sl
@@ -34,9 +36,11 @@ class Time
     I18n.l(self, format: :long).gsub(/\s+/, ' ').cpp
   end
 
+  # rubocop:disable Rails/Delegate, Lint/RedundantCopDisableDirective
   def cppz
     in_time_zone.cppz
   end
+  # rubocop:enable Rails/Delegate, Lint/RedundantCopDisableDirective
 end
 
 if defined?(ActiveSupport)
