@@ -147,21 +147,6 @@ mcd() { mkdir $1 && cd $1; }
 # Ex: `rb aaaaaaaa-bbbb-cccc-dddd-eeeeffffeeee`
 rb() { open -a Firefox "https://rollbar.com/occurrence/uuid/?uuid=$1" }
 
-# stop ruby and other processes
-rp() {
-  spring stop && \
-    sleep 0.5 && \
-    (echo 'trying to kill ...') && \
-    (ps -e | egrep 'sidekiq|ruby|spring|puma|node|[Cc]hrome' | egrep -v 'egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks|wait-merge|open-gh-pr') && \
-    (ps -e | egrep 'spring' | egrep -v egrep | awk '{print $1}' | xargs kill -TERM) && \
-    (ps -e | egrep 'ruby' | egrep -v egrep | awk '{print $1}' | xargs kill -QUIT) && \
-    (ps -e | egrep 'puma|sidekiq|node' | egrep -v 'egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks|wait-merge|open-gh-pr' | awk '{print $1}' | xargs kill -INT) && \
-    (ps aux | rg "[Cc]hrome" | rg -v "Helper" | awk '{print $2}' | xargs kill) && \
-    (sleep 1) && \
-    (echo '\nremaining processes:\n') && \
-    (ps -e | egrep 'sidekiq|ruby|spring|puma|node|[Cc]hrome' | egrep -v 'egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks|wait-merge|open-gh-pr')
-}
-
 # "sublime code" (open a GitHub repo in Sublime)
 # ex: `sc https://github.com/plashchynski/crono`
 sc() {
