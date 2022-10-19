@@ -29,7 +29,6 @@ rspec_prefixer = RspecPrefixer.new
 guard(:shell, all_on_start: true) do
   ignore(%r{
     ^(
-    .byebug_history|
     .bundle/
     .github/
     coverage/|
