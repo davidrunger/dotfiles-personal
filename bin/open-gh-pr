@@ -11,7 +11,7 @@ class Runner
   end
 
   def open_pr
-    system("open -a Firefox #{pr_link}") if pr_link
+    system("open -a Firefox\\ Developer\\ Edition #{pr_link}") if pr_link
   end
 
   memoize \
