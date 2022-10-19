@@ -36,6 +36,7 @@ guard(:shell, all_on_start: true) do
     log/|
     node_modules/|
     personal/|
+    spec/fixtures/|
     tmp/
     )
   }x)
