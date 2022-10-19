@@ -5,7 +5,6 @@ require 'guard/shell'
 guard(:shell, all_on_start: true) do
   watch(%r{
    ^(
-   personal/random.txt|
    personal/ruby.rb
    )$
   }x) do |_|
