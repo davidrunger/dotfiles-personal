@@ -34,8 +34,8 @@ if (
   # open with Sublime
   system("~/workspace/dotfiles/bin/subl #{dir}/#{target}:#{file_and_line.sub(':::', '')}")
 elsif file_and_line.match?(GIT_SHA_REGEX)
-  # open with Chrome
-  system(%(open -a Firefox "https://github.com/davidrunger/david_runger/commit/#{file_and_line}"))
+  # open with default browser
+  system(%(open "https://github.com/davidrunger/david_runger/commit/#{file_and_line}"))
 elsif system(%(file #{absolute_path} | grep -q "text"))
   # open with Sublime
   system("~/workspace/dotfiles/bin/subl #{dir}/#{cleaned}")

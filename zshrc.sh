@@ -145,7 +145,7 @@ mcd() { mkdir $1 && cd $1; }
 
 # open rollbar occurrence page using Rollbar error UUID
 # Ex: `rb aaaaaaaa-bbbb-cccc-dddd-eeeeffffeeee`
-rb() { open -a Firefox "https://rollbar.com/occurrence/uuid/?uuid=$1" }
+rb() { open "https://rollbar.com/occurrence/uuid/?uuid=$1" }
 
 # "sublime code" (open a GitHub repo in Sublime)
 # ex: `sc https://github.com/plashchynski/crono`
