@@ -268,7 +268,7 @@ alias dspec='DISABLE_SPRING=1 bin/rspec'
 alias ffs='RAILS_ENV=test bin/rails spec:fixture_builder:rebuild'
 alias fix='git diff --name-only | uniq | xargs $EDITOR'
 alias fsk='redis-cli -n 1 FLUSHDB && sk' # `-n 1` because of `config.redis = {db: 1}` in `config/initializers/sidekiq.rb`
-alias fx='open -a Firefox'
+alias fx='open -a Firefox\ Developer\ Edition'
 alias ga='git add'
 alias gaa='git add -p'
 alias gb='git branch -vv'
