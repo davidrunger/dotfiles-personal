@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# Examples:
+#   gal -g rails
+#   gal -g ruby -d -l
+#   gal spec/models/user_spec.rb -b -c
+
+require 'memoist'
 require 'slop'
 
 module Gal
@@ -8,13 +14,14 @@ module Gal
     puts(
       options.to_s.dup.
         sub(%r{/Users/david/workspace/dotfiles/bin/}, '').
-        sub(%r{gal \[options\]}, 'gal <spec files to run> [options]'),
+        sub(%r{gal \[options\]}, 'gal [spec file(s) to run] [options]'),
     )
   end
 end
 
 opts =
   Slop.parse do |o|
+    o.symbol('-g', '--guardfile', 'guardfile flag [spec (default) | ruby | rails]', default: :spec)
     o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
     o.bool('-s', '--skip-spring', 'do not use spring')
     o.bool('-c', '--force-coverage-detail', 'print code coverage info even if 100% covered')
@@ -26,23 +33,58 @@ opts =
     end
   end
 
-if opts.arguments.empty?
-  Gal.print_options(opts.options)
-else
-  command = +'guard -G /Users/david/workspace/dotfiles/guardfiles/run_spec.rb --no-bundler-warning'
-  if opts.debug_guard?
-    command << ' --debug'
+class Runner
+  extend Memoist
+
+  def initialize(opts)
+    @opts = opts
   end
 
-  system(
+  def run
+    system(env_vars, command)
+  end
+
+  private
+
+  memoize \
+  def command
+    command = +"guard -G #{guardfile} --no-bundler-warning"
+
+    if @opts.debug_guard?
+      command << ' --debug'
+    end
+
+    command
+  end
+
+  memoize \
+  def env_vars
     {
       'RUBYGEMS_GEMDEPS' => '', # this suppresses a warning from guard
-      'RSPEC_BACKTRACE' => opts.backtrace? ? '1' : nil,
-      'LISTEN_GEM_DEBUGGING' => opts.debug_listen? ? 'debug' : nil,
-      'TARGET_SPEC_FILES' => opts.arguments.join(' '),
-      'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', opts.skip_spring? ? '1' : nil),
-      'SIMPLECOV_FORCE_DETAILS' => opts.force_coverage_detail? ? '1' : nil,
-    }.compact,
-    command,
-  )
+      'RSPEC_BACKTRACE' => @opts.backtrace? ? '1' : nil,
+      'LISTEN_GEM_DEBUGGING' => @opts.debug_listen? ? 'debug' : nil,
+      'TARGET_SPEC_FILES' => @opts.arguments.join(' '),
+      'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', @opts.skip_spring? ? '1' : nil),
+      'SIMPLECOV_FORCE_DETAILS' => @opts.force_coverage_detail? ? '1' : nil,
+    }.compact
+  end
+
+  memoize \
+  def guardfile
+    filename =
+      case (guardfile_flag = @opts[:guardfile])
+      when :spec then 'run_spec'
+      when :ruby then 'run_ruby'
+      when :rails then 'run_rails'
+      else raise("Unexpected guardfile flag '#{guardfile_flag}'.")
+      end
+
+    "/Users/david/workspace/dotfiles/guardfiles/#{filename}.rb"
+  end
+end
+
+if opts.arguments.empty? && opts.used_options.empty?
+  Gal.print_options(opts.options)
+else
+  Runner.new(opts).run
 end
