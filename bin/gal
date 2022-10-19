@@ -19,6 +19,7 @@ opts =
     o.bool('-s', '--skip-spring', 'do not use spring')
     o.bool('-c', '--force-coverage-detail', 'print code coverage info even if 100% covered')
     o.bool('-d', '--debug-guard', 'enable guard debug logging')
+    o.bool('-l', '--debug-listen', 'enable listen debug logging')
     o.on('-h', '--help', 'view this help info') do
       Gal.print_options(o)
       exit
@@ -37,6 +38,7 @@ else
     {
       'RUBYGEMS_GEMDEPS' => '', # this suppresses a warning from guard
       'RSPEC_BACKTRACE' => opts.backtrace? ? '1' : nil,
+      'LISTEN_GEM_DEBUGGING' => opts.debug_listen? ? 'debug' : nil,
       'TARGET_SPEC_FILES' => opts.arguments.join(' '),
       'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', opts.skip_spring? ? '1' : nil),
       'SIMPLECOV_FORCE_DETAILS' => opts.force_coverage_detail? ? '1' : nil,
