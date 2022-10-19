@@ -26,6 +26,13 @@ end
 
 rspec_prefixer = RspecPrefixer.new
 
+module RungerGuardWatcherPatches
+  def match_files(guard, files)
+    super(guard, files.uniq)
+  end
+end
+Guard::Watcher.singleton_class.prepend(RungerGuardWatcherPatches)
+
 guard(:shell, all_on_start: true) do
   ignore(%r{
     ^(
