@@ -19,9 +19,9 @@ echo 'trying to kill ...'
 ps -e | egrep $processes_to_kill | egrep -v $processes_to_ignore
 
 # end the processes
-ps -e | egrep $processes_to_quit | egrep -v egrep | awk '{print $1}' | xargs kill -QUIT
+ps -e | egrep $processes_to_quit | egrep -v $processes_to_ignore | awk '{print $1}' | xargs kill -QUIT
 ps -e | egrep $processes_to_int | egrep -v $processes_to_ignore | awk '{print $1}' | xargs kill -INT
-ps -e | egrep $processes_to_term | egrep -v egrep | awk '{print $1}' | xargs kill -TERM
+ps -e | egrep $processes_to_term | egrep -v $processes_to_ignore | awk '{print $1}' | xargs kill -TERM
 sleep 0.5 # wait a moment for processes to exit
 
 # print processes that are still running
