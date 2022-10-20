@@ -46,7 +46,7 @@ class Runner
   end
 
   def run
-    colored_command = "#{env_vars.map { |k, v| "#{k}=#{v}" }.join(' ')} #{command}".blue
+    colored_command = "#{env_vars.map { |k, v| %(#{k}="#{v}") }.join(' ')} #{command}".blue
     puts("Running #{colored_command}")
     system(env_vars, command)
   end
