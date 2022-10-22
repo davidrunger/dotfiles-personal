@@ -31,3 +31,4 @@ config/initializers/z.rb
 Procfile.all.dev
 Procfile.most.dev
 Procfile.web.dev
+Procfile.iphone.dev

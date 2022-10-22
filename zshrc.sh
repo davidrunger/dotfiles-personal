@@ -304,6 +304,7 @@ alias gstash='git stash --include-untracked --keep-index'
 alias gunstage='git reset HEAD'
 alias gunstash='git stash apply'
 alias hwm='hpr && wm'
+alias iphone='FORCE_COLOR=1 foreman start -f Procfile.iphone.dev'
 alias md='mkdir -p'
 alias most='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.most.dev'
 alias np="rg --files-with-matches 'binding\\.pry' | xargs sed -i '' -e '/binding\\.pry/d'"
