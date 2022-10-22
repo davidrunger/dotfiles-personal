@@ -326,6 +326,7 @@ alias sk="bin/sidekiq"
 alias sn='subl ~/Sync/notes'
 alias ss='bin/spring stop'
 alias vds='bin/vite dev'
+alias vdsd='bin/vite dev --debug --trace-deprecation'
 alias web='FORCE_COLOR=1 foreman start -f Procfile.web.dev'
 alias wm='wait-merge'
 alias work='cd ~/workspace'
