@@ -30,6 +30,7 @@ opts =
     o.bool('-f', '--force-guardfile-template-copy', 'force copying guardfile to personal directory')
     o.bool('-d', '--debug-guard', 'enable guard debug logging')
     o.bool('-l', '--debug-listen', 'enable listen debug logging')
+    o.bool('-v', '--headful-chrome', 'run tests with headful chrome browser')
     o.on('-h', '--help', 'view this help info') do
       Gal.print_options(o)
       exit
@@ -69,6 +70,7 @@ class Runner
     {
       'RUBYGEMS_GEMDEPS' => '', # this suppresses a warning from guard
       'RSPEC_BACKTRACE' => @opts.backtrace? ? '1' : nil,
+      'HEADFUL_CHROME' => @opts.headful_chrome? ? '1' : nil,
       'LISTEN_GEM_DEBUGGING' => @opts.debug_listen? ? 'debug' : nil,
       'TARGET_SPEC_FILES' => @opts.arguments.empty? ? nil : @opts.arguments.join(' '),
       'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', @opts.skip_spring? ? '1' : nil),
