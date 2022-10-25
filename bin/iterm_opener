@@ -44,5 +44,5 @@ elsif system(%(file #{file} | grep -q "text"))
   system("~/workspace/dotfiles/bin/subl #{cleaned}")
 else
   # open with Chrome (or something else)
-  system("/usr/bin/open #{file_and_line}")
+  system("/usr/bin/open #{absolute_path}")
 end
