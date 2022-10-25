@@ -43,6 +43,6 @@ elsif system(%(file #{file} | grep -q "text"))
   # open with Sublime
   system("~/workspace/dotfiles/bin/subl #{cleaned}")
 else
-  # open with Chrome (or something else)
+  # open with default application chosen by MacOS
   system("/usr/bin/open #{absolute_path}")
 end
