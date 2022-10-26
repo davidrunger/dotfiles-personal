@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-ln -sf ~/workspace/dotfiles/gitignore_global ~/.gitignore_global
-ln -sf ~/workspace/dotfiles/initializers/z.rb ~/workspace/david_runger/config/initializers/z.rb
-ln -sf ~/workspace/dotfiles/irbrc.rb ~/.irbrc.rb
-ln -sf ~/workspace/dotfiles/pryrc.rb ~/.pryrc
-ln -sf ~/workspace/dotfiles/rspec ~/.rspec
-ln -sf ~/workspace/dotfiles/rubocop.yml ~/.rubocop.yml
-ln -sf ~/workspace/dotfiles/zsh-themes ~/.oh-my-zsh/custom/themes
-ln -sf ~/workspace/dotfiles/zshrc.sh ~/.zshrc
+ln -sf ~/code/dotfiles/gitignore_global ~/.gitignore_global
+ln -sf ~/code/dotfiles/initializers/z.rb ~/code/david_runger/config/initializers/z.rb
+ln -sf ~/code/dotfiles/irbrc.rb ~/.irbrc.rb
+ln -sf ~/code/dotfiles/pryrc.rb ~/.pryrc
+ln -sf ~/code/dotfiles/rspec ~/.rspec
+ln -sf ~/code/dotfiles/rubocop.yml ~/.rubocop.yml
+ln -sf ~/code/dotfiles/zsh-themes ~/.oh-my-zsh/custom/themes
+ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc

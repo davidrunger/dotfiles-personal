@@ -32,16 +32,16 @@ if (
 )
   target = File.read(file_location).rstrip
   # open with Sublime
-  system("~/workspace/dotfiles/bin/subl #{dir}/#{target}:#{file_and_line.sub(':::', '')}")
+  system("~/code/dotfiles/bin/subl #{dir}/#{target}:#{file_and_line.sub(':::', '')}")
 elsif file_and_line.match?(GIT_SHA_REGEX)
   # open with default browser
   system(%(open "https://github.com/davidrunger/david_runger/commit/#{file_and_line}"))
 elsif system(%(file #{absolute_path} | grep -q "text"))
   # open with Sublime
-  system("~/workspace/dotfiles/bin/subl #{dir}/#{cleaned}")
+  system("~/code/dotfiles/bin/subl #{dir}/#{cleaned}")
 elsif system(%(file #{file} | grep -q "text"))
   # open with Sublime
-  system("~/workspace/dotfiles/bin/subl #{cleaned}")
+  system("~/code/dotfiles/bin/subl #{cleaned}")
 else
   # open with default application chosen by MacOS
   system("/usr/bin/open #{absolute_path}")

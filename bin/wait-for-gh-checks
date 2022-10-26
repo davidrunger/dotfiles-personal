@@ -139,12 +139,12 @@ run_script = !ENV.key?('RUN_TESTS') && !(run_test_script = ENV.key?('RUN_TEST_SC
 if run_script
   Runner.new.run
 elsif run_test_script
-  # run this with `RUN_TEST_SCRIPT=1 ruby /Users/david/workspace/dotfiles/bin/wait-for-gh-checks`
+  # run this with `RUN_TEST_SCRIPT=1 ruby /Users/david/code/dotfiles/bin/wait-for-gh-checks`
   # loop_runner = Runner::LoopRunner.new(runner: nil, start_time: nil)
   # pp(["loop_runner.checks_output", loop_runner.checks_output])
   # puts(loop_runner.checks_output)
 else
-  # run tests with `cd /Users/david/workspace/dotfiles/bin/ && RUN_TESTS=1 ruby wait-for-gh-checks && cd -`
+  # run tests with `cd /Users/david/code/dotfiles/bin/ && RUN_TESTS=1 ruby wait-for-gh-checks && cd -`
   require 'bundler/inline'
   gemfile do
     source 'https://rubygems.org'
@@ -160,7 +160,7 @@ else
       subject(:repo) { runner.repo }
 
       context 'when in the david_runger repo' do
-        before { expect(Dir).to receive(:pwd).and_return('/Users/david/workspace/david_runger') }
+        before { expect(Dir).to receive(:pwd).and_return('/Users/david/code/david_runger') }
 
         it 'returns "david_runger"' do
           expect(repo).to eq('david_runger')

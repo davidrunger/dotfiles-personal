@@ -15,7 +15,7 @@ module Gal
   def self.print_options(options)
     puts(
       options.to_s.dup.
-        sub(%r{/Users/david/workspace/dotfiles/bin/}, '').
+        sub(%r{/Users/david/code/dotfiles/bin/}, '').
         sub(%r{gal \[options\]}, 'gal [spec file(s) to run] [options]'),
     )
   end
@@ -92,7 +92,7 @@ class Runner
 
   memoize \
   def dotfiles_absolute_path
-    "/Users/david/workspace/dotfiles/guardfiles/#{guardfile_filename}.rb"
+    "/Users/david/code/dotfiles/guardfiles/#{guardfile_filename}.rb"
   end
 
   memoize \

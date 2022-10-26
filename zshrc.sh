@@ -206,7 +206,7 @@ source /usr/local/opt/git-extras/share/git-extras/git-extras-completion.zsh
 # path setup
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin"
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
-export PATH=$HOME/bin:$HOME/workspace/dotfiles/bin:$HOME/Sync/bin:$PATH
+export PATH=$HOME/bin:$HOME/code/dotfiles/bin:$HOME/Sync/bin:$PATH
 
 # ruby setup
 export PATH=$HOME/.rbenv/bin:$PATH
@@ -254,15 +254,15 @@ export SIMPLECOV_WRITE_TARGET_TO_FILE=1
 alias all='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.all.dev'
 alias bat='bat --paging=never'
 alias br='bin/rubocop'
-alias build='subl ~/workspace/dotfiles/personal/bin/sublime-build.sh'
+alias build='subl ~/code/dotfiles/personal/bin/sublime-build.sh'
 alias chr='open -a Google\ Chrome'
 alias cop='bin/rubocop $(git ls-tree -r HEAD --name-only) --force-exclusion --format progress'
 alias d='clear'
-alias david='cd ~/workspace/david_runger'
+alias david='cd ~/code/david_runger'
 alias dbm='bin/rails db:migrate db:test:prepare'
 alias dbr='bin/rails db:rollback db:test:prepare'
 alias dl='curl -O'
-alias dots='cd ~/workspace/dotfiles'
+alias dots='cd ~/code/dotfiles'
 alias down='cd ~/Downloads'
 alias dspec='DISABLE_SPRING=1 bin/rspec'
 alias ffs='RAILS_ENV=test bin/rails spec:fixture_builder:rebuild'
@@ -319,7 +319,7 @@ alias s.='subl && sleep 0.1 && subl .'
 alias s='subl && sleep 0.1 && subl'
 alias safe='git checkout safe && gform'
 alias say='say -v Rishi'
-alias sd='subl ~/workspace/david_runger'
+alias sd='subl ~/code/david_runger'
 alias sdm='safe; gdm'
 alias sha='git log master --format=format:%H | head -n 1 | cut -c1-7 | cpy'
 alias sk="bin/sidekiq"
@@ -329,7 +329,7 @@ alias vds='bin/vite dev'
 alias vdsd='bin/vite dev --debug --trace-deprecation'
 alias web='FORCE_COLOR=1 foreman start -f Procfile.web.dev'
 alias wm='wait-merge'
-alias work='cd ~/workspace'
+alias work='cd ~/code'
 alias yic='yarn install --check-files'
 alias zrc='subl ~/.zshrc'
 alias zs='source ~/.zshrc'
