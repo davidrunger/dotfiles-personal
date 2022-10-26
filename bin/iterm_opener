@@ -31,18 +31,21 @@ if (
     File.exist?((file_location = "#{dir}/tmp/simple_cov/formatter/terminal/target.txt"))
 )
   target = File.read(file_location).rstrip
-  # open with Sublime
+  # debug('open with Sublime')
   system("~/code/dotfiles/bin/subl #{dir}/#{target}:#{file_and_line.sub(':::', '')}")
 elsif file_and_line.match?(GIT_SHA_REGEX)
-  # open with default browser
+  # debug('open git sha with default browser')
   system(%(open "https://github.com/davidrunger/david_runger/commit/#{file_and_line}"))
+elsif file_and_line.start_with?('http')
+  # debug('open HTTP url with default browser')
+  system("/usr/bin/open #{file_and_line}")
 elsif system(%(file #{absolute_path} | grep -q "text"))
-  # open with Sublime
+  # debug('open absolute_path with Sublime')
   system("~/code/dotfiles/bin/subl #{dir}/#{cleaned}")
 elsif system(%(file #{file} | grep -q "text"))
-  # open with Sublime
+  # debug('open file with Sublime')
   system("~/code/dotfiles/bin/subl #{cleaned}")
 else
-  # open with default application chosen by MacOS
+  # debug('open with default application chosen by MacOS')
   system("/usr/bin/open #{absolute_path}")
 end
