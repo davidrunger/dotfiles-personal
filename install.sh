@@ -7,5 +7,4 @@ ln -sf ~/workspace/dotfiles/pryrc.rb ~/.pryrc
 ln -sf ~/workspace/dotfiles/rspec ~/.rspec
 ln -sf ~/workspace/dotfiles/rubocop.yml ~/.rubocop.yml
 ln -sf ~/workspace/dotfiles/zsh-themes ~/.oh-my-zsh/custom/themes
-ln -sf ~/workspace/dotfiles/zsh-themes/bolso.zsh-theme ~/.oh-my-zsh/custom/themes/bolso.zsh-theme
 ln -sf ~/workspace/dotfiles/zshrc.sh ~/.zshrc
