@@ -26,6 +26,8 @@ end
 
 rspec_prefixer = RspecPrefixer.new
 
+# This avoids re-running specs multiple times when a file is saved multiple times while the spec(s)
+# are executing. Instead, just run once after the most recent modification.
 module RungerGuardWatcherPatches
   def match_files(guard, files)
     super(guard, files.uniq)
