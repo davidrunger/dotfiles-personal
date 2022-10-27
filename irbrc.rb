@@ -5,6 +5,7 @@
 # Instead, create a project-local `.irbrc` file, and in it put `load '/Users/david/.irbrc.rb'`.
 
 require_relative './utils/ruby/copy_utils.rb'
+Object.prepend(CopyUtils)
 
 # rubocop:disable Style/TopLevelMethodDefinition
 def skip!
@@ -29,7 +30,6 @@ class Object
     method(method_name)
   end
 end
-Object.prepend(CopyUtils)
 
 class Time
   def cppa

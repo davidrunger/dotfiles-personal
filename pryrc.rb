@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './utils/ruby/copy_utils.rb'
+Object.prepend(CopyUtils)
 
 Pry.config.pager = false
 Pry.config.color = true
