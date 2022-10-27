@@ -9,7 +9,8 @@ then
 fi
 
 # don't push if there's still debugging code
-ag '^(\s*(fit|fdescribe|fcontext|fspecify|open_page))|(binding\.pry|byebug)' -iG '\.*(\.rake|\.rb|\.js|\.coffee|\.haml|\.html|\.erb)' --ignore script/ --ignore lib/middleware/set_config_sidekiq_middleware.rb
+rg -g '*.rake' -g '*.rb' -g '*.js' -g '*.coffee' -g '*.haml' -g '*.html' -g '*.erb' \
+  '^(\s*(fit|fdescribe|fcontext|fspecify|open_page))|(binding\.pry|byebug)'
 if [ $? -eq 0 ]
 then
   echo
