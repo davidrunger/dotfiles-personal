@@ -5,8 +5,10 @@
 # print absolute path of a file
 abs() { echo $(pwd)/$(ls $@ | sed "s|^\./||") }
 
+# bundle
 b() { bundle install }
 
+# build ctags
 build_ctags() {
   if [[ $BUILD_CTAGS == 'true' ]]
   then
@@ -32,24 +34,29 @@ cpy() {
   echo "Text copied to clipboard:\n$TEXT"
 }
 
+# git checkout
 gco() { git checkout $@ }
 
+# git checkout branch based on current branch
 gcob() {
   git checkout -b $@
   gsup
 }
 
+# git fetch and checkout specified branch
 gfco() {
   git fetch
   git checkout $@
   gsup
 }
 
+# git fetch and check out new branch with specified name
 gfcob() {
   BRANCH=origin/${2:-master}
   git fetch && git co -b $1 $BRANCH
 }
 
+# git fetch from origin and rebase updates from master
 gform() {
   git fetch --no-tags --quiet origin && git fetch --no-tags --quiet origin master:master && git rebase origin/master
   gst
@@ -71,6 +78,7 @@ gsd() {
   git show $1 | EXT=diff tosubl
 }
 
+# git set upstream
 gsup() {
   UPSTREAM_NAME=${${1:-master}//origin\/}
   UPSTREAM=origin/$UPSTREAM_NAME
@@ -78,6 +86,7 @@ gsup() {
   git status -sb
 }
 
+# git commit (and write message in editor)
 gcom() {
   verify-on-ok-branch
   if [ $? -ne 0 ]
@@ -88,6 +97,7 @@ gcom() {
   git commit --verbose
 }
 
+# git commit with message written in terminal
 gcomm() {
   verify-on-ok-branch
   if [ $? -ne 0 ]
@@ -98,6 +108,7 @@ gcomm() {
   git commit -m $1
 }
 
+# old name for `gpf`
 gpfoh() {
   echo "Renamed to gpf"
 }
