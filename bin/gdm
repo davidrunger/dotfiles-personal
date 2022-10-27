@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# '[g]it [d]elete [m]erged branches'
+
 git fetch --no-tags --quiet origin master:master
 git checkout --quiet master &&
   git branch --merged | egrep -v "(\*|master|safe)" | xargs -n 1 git branch -d &&

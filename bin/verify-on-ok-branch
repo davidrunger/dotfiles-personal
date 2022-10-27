@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# make sure that we are on a branch that it's okay to commit to directly
+
 # commits to master are allowed for some projects
 if [[ $PWD == "/Users/david/code/dotfiles" || $PWD == "/Users/david/Sync/bin" ]]
 then

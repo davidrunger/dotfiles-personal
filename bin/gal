@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# `gal` originally mean "guard all", but now it's just what I use to run guard
+
 # Examples:
 #   gal -g rails
 #   gal -g ruby -d -l

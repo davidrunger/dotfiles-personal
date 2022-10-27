@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# make sure that we're on a branch that's okay to push and that there isn't any debugging code etc
+
 verify-on-ok-branch
 if [ $? -ne 0 ]
 then

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# stop [r]uby (and some other) [p]rocesses
+# stop/kill [r]uby (and some other) [p]rocesses
 
 set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# when cmd-clicking something in iTerm, this opens the file/link/etc with an appropriate program
+
 dir = ARGV[0] # Example: "/Users/david/Downloads"
 file_and_line = ARGV[1] # Example: "file.txt:2"
 

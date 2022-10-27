@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# run the test suite / linters for the current project
+
 if [[ $PWD =~ /active_actions$ ]] ; then
   set -x
   bin/rubocop
