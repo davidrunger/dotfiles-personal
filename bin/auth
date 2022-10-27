@@ -21,7 +21,7 @@ class Authenticator
     end
   end
 
-  # private
+  private
 
   memoize \
   def backup_codes_exist?
