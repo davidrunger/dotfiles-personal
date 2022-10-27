@@ -56,7 +56,7 @@ class Runner
 
   memoize \
   def command
-    command = +"guard -G #{guardfile} --no-bundler-warning"
+    command = +"guard -G #{guardfile_path} --no-bundler-warning"
 
     if @opts.debug_guard?
       command << ' --debug'
@@ -79,19 +79,19 @@ class Runner
   end
 
   memoize \
-  def guardfile
+  def guardfile_path
     if GUARDFILE_TEMPLATES.include?(guardfile_filename)
       if !File.exist?(working_directory_guardfile_path) || @opts.force_guardfile_template_copy?
         copy_dotfile_to_working_directory
       end
       working_directory_guardfile_path
     else
-      dotfiles_absolute_path
+      dotfiles_absolute_guardfile_path
     end
   end
 
   memoize \
-  def dotfiles_absolute_path
+  def dotfiles_absolute_guardfile_path
     "/Users/david/code/dotfiles/guardfiles/#{guardfile_filename}.rb"
   end
 
@@ -107,7 +107,7 @@ class Runner
 
   def copy_dotfile_to_working_directory
     FileUtils.mkdir_p(working_directory_guardfile_directory)
-    FileUtils.cp(dotfiles_absolute_path, working_directory_guardfile_directory)
+    FileUtils.cp(dotfiles_absolute_guardfile_path, working_directory_guardfile_directory)
   end
 
   def working_directory_guardfile_path
