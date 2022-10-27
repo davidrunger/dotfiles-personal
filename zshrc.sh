@@ -239,10 +239,7 @@ export NVM_SYMLINK_CURRENT=true # https://stackoverflow.com/a/60063217/4009384
 export PATH=$PATH:node_modules/.bin
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; can't start with `~/`
-# OLD SLOW WAY to load nvm:
-# [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-# -----------
-# NEW FAST WAY to load nvm lazily! Modified slightly from:
+# Load nvm lazily! Modified slightly from:
 # https://gist.github.com/gfguthrie/9f9e3908745694c81330c01111a9d642
 # add our default nvm node (`nvm alias default v10.16.0`) to path without loading nvm
 export PATH="$NVM_DIR/versions/node/$(<$NVM_DIR/alias/default)/bin:$PATH"
