@@ -324,7 +324,6 @@ alias rc="DISABLE_SPRING=1 IS_RAILS_CONSOLE=1 bin/rails console"
 alias rgs='rg -F --max-columns 1000'
 alias rmrf='rm -rf'
 alias rr='bin/rails routes'
-alias rrp="spring stop && (echo 'trying to kill ...') && (ps -e | egrep 'sidekiq|ruby|spring|puma' | egrep -v 'egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks') && (ps -e | egrep 'spring' | egrep -v egrep | awk '{print \$1}' | xargs kill -TERM) && (ps -e | egrep 'ruby' | egrep -v egrep | awk '{print \$1}' | xargs kill -QUIT) && (ps -e | egrep 'puma|sidekiq' | egrep -v 'egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks' | awk '{print \$1}' | xargs kill -INT) && (sleep 1) && (echo '\nremaining processes:\n') && (ps -e | egrep 'sidekiq|ruby|spring|puma' | egrep -v 'egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks')"
 alias rs="bin/rails server"
 alias s.='subl && sleep 0.1 && subl .'
 alias s='subl && sleep 0.1 && subl'

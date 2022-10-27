@@ -2,28 +2,8 @@
 
 # stop/kill [r]uby (and some other) [p]rocesses
 
-set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+source ~/code/dotfiles/bin/rrp
 
-processes_to_ignore='egrep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks|wait-merge|open-gh-pr|Helper'
-processes_to_quit='ruby'
-processes_to_term='spring|[Cc]hrome'
-processes_to_int='puma|sidekiq|node'
-processes_to_kill="$processes_to_term|$processes_to_quit|$processes_to_int"
+processes_to_int+="|node"
 
-# only try to stop spring with `spring stop` if in a directory with a Gemfile
-[ -f Gemfile ] && spring stop
-sleep 0.5 # wait a moment for spring to shut down
-
-# print the processes to end
-echo 'trying to kill ...'
-ps -e | egrep $processes_to_kill | egrep -v $processes_to_ignore
-
-# end the processes
-ps -e | egrep $processes_to_quit | egrep -v $processes_to_ignore | awk '{print $1}' | xargs kill -QUIT
-ps -e | egrep $processes_to_int | egrep -v $processes_to_ignore | awk '{print $1}' | xargs kill -INT
-ps -e | egrep $processes_to_term | egrep -v $processes_to_ignore | awk '{print $1}' | xargs kill -TERM
-sleep 0.5 # wait a moment for processes to exit
-
-# print processes that are still running
-printf "\nremaining processes:\n"
-ps -e | egrep $processes_to_kill | egrep -v $processes_to_ignore
+stop_processes
