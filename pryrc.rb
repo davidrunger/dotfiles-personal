@@ -22,6 +22,7 @@ require 'amazing_print'
 # similar to `AmazingPrint.pry!`, but with `=> ` at the beginning
 Pry.print = proc { |output, value| output.puts("=> #{value.ai}") }
 
+# rubocop:disable Style/TopLevelMethodDefinition
 def skip!
   $stop_skipping_at = Time.at(Integer(Time.now) + 5)
 end
@@ -29,6 +30,7 @@ end
 def subl(filename = nil)
   system("subl #{filename}")
 end
+# rubocop:enable Style/TopLevelMethodDefinition
 
 module MethodSource::MethodExtensions
   def sl
