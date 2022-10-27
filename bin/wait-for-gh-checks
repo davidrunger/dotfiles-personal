@@ -8,7 +8,7 @@ require 'active_support/core_ext/string/filters'
 require 'forwardable'
 require 'memoist'
 
-class Runner
+class WaitForChecksRunner
   extend Memoist
 
   MAX_TIME = 8.minutes
@@ -18,7 +18,7 @@ class Runner
     start_time = Time.now
 
     loop do
-      loop_runner = ::Runner::LoopRunner.new(runner: self, start_time:)
+      loop_runner = ::WaitForChecksRunner::LoopRunner.new(runner: self, start_time:)
       loop_runner.run_loop
       sleep(RETRY_INTERVAL)
     end
@@ -80,7 +80,7 @@ class Runner
   end
 end
 
-class Runner::LoopRunner
+class WaitForChecksRunner::LoopRunner
   extend Forwardable
   extend Memoist
 
@@ -110,14 +110,14 @@ class Runner::LoopRunner
     else
       debug(<<~LOG.squish)
         #{num_passing_checks}/#{expected_num_passed_checks} checks passed.
-        Waiting for #{::Runner::RETRY_INTERVAL} seconds and then retrying.
+        Waiting for #{::WaitForChecksRunner::RETRY_INTERVAL} seconds and then retrying.
       LOG
     end
   end
 
   memoize \
   def fail_exit_reason
-    if Time.now - @start_time > ::Runner::MAX_TIME
+    if Time.now - @start_time > ::WaitForChecksRunner::MAX_TIME
       return 'max time exceeded'
     end
 
@@ -137,83 +137,11 @@ class Runner::LoopRunner
   end
 end
 
-run_script = !ENV.key?('RUN_TESTS') && !(run_test_script = ENV.key?('RUN_TEST_SCRIPT'))
-if run_script
-  Runner.new.run
-elsif run_test_script
+if ENV.key?('RUN_TEST_SCRIPT')
   # run this with `RUN_TEST_SCRIPT=1 ruby /Users/david/code/dotfiles/bin/wait-for-gh-checks`
-  # loop_runner = Runner::LoopRunner.new(runner: nil, start_time: nil)
+  # loop_runner = WaitForChecksRunner::LoopRunner.new(runner: nil, start_time: nil)
   # pp(["loop_runner.checks_output", loop_runner.checks_output])
   # puts(loop_runner.checks_output)
-else
-  # run tests with `cd /Users/david/code/dotfiles/bin/ && RUN_TESTS=1 ruby wait-for-gh-checks && cd -`
-  require 'bundler/inline'
-  gemfile do
-    source 'https://rubygems.org'
-    gem 'debug'
-    gem 'rspec'
-  end
-  require 'rspec/autorun'
-
-  RSpec.describe Runner do
-    subject(:runner) { Runner.new }
-
-    describe '#repo' do
-      subject(:repo) { runner.repo }
-
-      context 'when in the david_runger repo' do
-        before { expect(Dir).to receive(:pwd).and_return('/Users/david/code/david_runger') }
-
-        it 'returns "david_runger"' do
-          expect(repo).to eq('david_runger')
-        end
-      end
-    end
-  end
-
-  RSpec.describe Runner::LoopRunner do
-    subject(:loop_runner) { Runner::LoopRunner.new(runner:, start_time: Time.now) }
-
-    let(:runner) { Runner.new }
-
-    describe '#fail_exit_reason' do
-      subject(:fail_exit_reason) { loop_runner.fail_exit_reason }
-
-      context 'when the repo is "david_runger"' do
-        before { expect(runner).to receive(:repo).and_return('david_runger') }
-
-        context 'when the test output indicates that the test suite has failed' do
-          before do
-            expect(loop_runner).to receive(:checks_output).and_return(<<~OUTPUT)
-              test  fail  3m3s  https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096817061
-              deploy-and-prerender  skipping  0 https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096859848
-              percy/david_runger  pass  0 https://percy.io/David-Runger/david_runger/builds/21769344?utm_campaign=David-Runger&utm_content=david_runger&utm_source=github_status_private
-            OUTPUT
-          end
-
-          it 'returns "tests failed"' do
-            expect(fail_exit_reason).to eq('tests failed')
-          end
-        end
-      end
-    end
-
-    describe '#num_passing_checks' do
-      subject(:num_passing_checks) { loop_runner.num_passing_checks }
-
-      context 'when the test output indicates that there are 2 passing checks' do
-        before do
-          expect(loop_runner).to receive(:checks_output).and_return(<<~OUTPUT)
-            test  pass  3m3s  https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096817061
-            deploy-and-prerender  skipping  0 https://github.com/davidrunger/david_runger/actions/runs/3137993451/jobs/5096859848
-            percy/david_runger  pass  0 https://percy.io/David-Runger/david_runger/builds/21769344?utm_campaign=David-Runger&utm_content=david_runger&utm_source=github_status_private
-          OUTPUT
-        end
-
-        it 'returns 2' do
-          expect(num_passing_checks).to eq(2)
-        end
-      end
-    end
-  end
+elsif !$PROGRAM_NAME.include?('rspec')
+  WaitForChecksRunner.new.run
 end

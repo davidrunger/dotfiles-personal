@@ -2,6 +2,8 @@
 
 # run the test suite / linters for the current project
 
+set -euo pipefail
+
 if [[ $PWD =~ /active_actions$ ]] ; then
   set -x
   bin/rubocop
@@ -54,6 +56,10 @@ elif [[ $PWD =~ /simple_cov-formatter-terminal$ ]] ; then
   set -x
   bin/rubocop
   bin/rspec
+elif [[ $PWD =~ /dotfiles$ ]] ; then
+  set -x
+  rubocop
+  rspec
 else
   echo 'Unknown directory!'
   exit 1

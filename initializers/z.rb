@@ -247,6 +247,7 @@ class Rollbar::Notifier
       "Rollbar #{level}:".public_send(color)
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def error_log(level, args)
       message, exception, extra, context = extract_arguments(args)
       item = build_item(level, message, exception, extra, context)
@@ -279,6 +280,7 @@ class Rollbar::Notifier
 
       message
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def log(level, *args)
       super_result = super
