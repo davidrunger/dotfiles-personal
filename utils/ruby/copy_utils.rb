@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'amazing_print'
+require_relative './load_gem'
+load_gem 'amazing_print' if !defined?(AmazingPrint)
 
 module CopyUtils
   def cpp(input = nil)
