@@ -155,12 +155,18 @@ ActiveSupport::Notifications.subscribe('process_action.action_controller') do |*
   $runger_expensive_queries = {}
 end
 
-# This creates duplicate logs in sidekiq. Figure out a better way to show ActiveRecord queries.
-# if ::Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
-#   puts('setting Sidekiq logging to aggressive mode')
-#   logger = ::Logger.new($stdout, formatter: Logger::Formatter.new)
-#   ::Rails.logger.extend(::ActiveSupport::Logger.broadcast(logger))
-# end
+# write ActiveRecord queries and other Rails logs in Sidekiq process to stdout in development
+if ::Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
+  puts('Logging to $stdout for Rails and ActiveRecord in Sidekiq process')
+
+  Rails.logger =
+    ActiveSupport::Logger.new($stdout).
+      tap { |logger| logger.formatter = ActiveSupport::Logger::SimpleFormatter.new }
+
+  ActiveRecord::Base.logger =
+    ActiveSupport::Logger.new($stdout).
+      tap { |logger| logger.formatter = ActiveSupport::Logger::SimpleFormatter.new }
+end
 
 def skip_for!(seconds) ;
   $stop_skipping_at = seconds.seconds.from_now ;
