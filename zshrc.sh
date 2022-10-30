@@ -233,6 +233,9 @@ export PYTHONPATH='/Users/david/lib/python'
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+# rust setup
+source "$HOME/.cargo/env"
+
 # node setup
 export NODE_ENV='development'
 export NVM_SYMLINK_CURRENT=true # https://stackoverflow.com/a/60063217/4009384
