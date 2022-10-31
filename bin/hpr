@@ -6,13 +6,8 @@
 
 set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
 
-check-git-push-safety
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
-
 gpf
+
 PR_CREATE_OUTPUT=$(gh pr create \
   --title "$(git log -1 --format=%s)" \
   --body "$(git log -1 --format=%b | ruby -r active_support/core_ext/string/filters -e 'puts(ARGF.read.split(/\n\n+/).map(&:squish).join("\n\n").strip)')"
