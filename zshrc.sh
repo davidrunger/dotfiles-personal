@@ -113,11 +113,6 @@ gpfoh() {
   echo "Renamed to gpf"
 }
 
-# git push force without running `check-git-push-safety` first
-gpfdangerous() {
-  git push -fu origin HEAD
-}
-
 # git update current commit with all uncommitted changes
 gup() {
   if [[ $(git rev-list --right-only --count master...HEAD) -eq 0 ]]
