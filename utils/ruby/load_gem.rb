@@ -11,5 +11,6 @@ def load_gem(gem_name)
     end
   gem_lib_directory = "#{latest_gem_directory}/lib"
   $LOAD_PATH << gem_lib_directory
+  require gem_name
 end
 # rubocop:enable Style/TopLevelMethodDefinition
