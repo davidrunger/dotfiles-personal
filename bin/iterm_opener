@@ -21,7 +21,7 @@ end
 dir = ARGV[0] # Example: "/Users/david/Downloads"
 file_and_line = ARGV[1] # Example: "file.txt:2"
 
-GIT_SHA_REGEX = %r{[a-f0-9]{40}}
+GIT_SHA_REGEX = %r{\A([a-f0-9]{7}|[a-f0-9]{40})\z}
 cleaned = file_and_line.sub(/^webpack:\/\/\//, '')
 cleaned.sub!(/\)$/, '')
 cleaned.sub!(%r{\A(a/|b/)}, '')
