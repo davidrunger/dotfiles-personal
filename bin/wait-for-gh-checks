@@ -7,6 +7,7 @@ require 'active_support/core_ext/numeric/time'
 require 'active_support/core_ext/string/filters'
 require 'forwardable'
 require 'memoist'
+require_relative '../utils/ruby/printer.rb'
 
 class WaitForChecksRunner
   extend Memoist
@@ -17,25 +18,21 @@ class WaitForChecksRunner
   def run
     start_time = Time.now
 
-    loop do
-      loop_runner = ::WaitForChecksRunner::LoopRunner.new(runner: self, start_time:)
-      loop_runner.run_loop
-      sleep(RETRY_INTERVAL)
+    Printer.printing_in_place do |printer|
+      loop do
+        ::WaitForChecksRunner::LoopRunner.new(
+          runner: self,
+          printer:,
+          start_time:,
+        ).run_loop
+        sleep(RETRY_INTERVAL)
+      end
     end
   end
 
   def print_and_say(message)
     puts(message)
     system("say -v Rishi #{message}")
-  end
-
-  def debug(message)
-    puts(message) if debug?
-  end
-
-  memoize \
-  def debug?
-    !ENV.key?('QUIET_WAIT_FOR_GH_CHECKS')
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
@@ -86,38 +83,41 @@ class WaitForChecksRunner::LoopRunner
 
   def_delegators(
     :@runner,
-    :debug,
     :expected_num_passed_checks,
     :print_and_say,
     :repo,
   )
 
-  def initialize(runner:, start_time:)
+  def initialize(runner:, printer:, start_time:)
     @runner = runner
+    @printer = printer
     @start_time = start_time
   end
 
   def run_loop
     if fail_exit_reason
+      @printer.break_out
       print_and_say("Exiting because #{fail_exit_reason}.")
       exit(1)
     end
 
     if num_passing_checks >= expected_num_passed_checks
+      @printer.break_out
       puts("#{num_passing_checks}/#{expected_num_passed_checks} checks passed.")
       print_and_say('Checks succeeded.')
       exit(0)
     else
-      debug(<<~LOG.squish)
+      @printer.print_in_place(<<~LOG.squish)
         #{num_passing_checks}/#{expected_num_passed_checks} checks passed.
         Waiting for #{::WaitForChecksRunner::RETRY_INTERVAL} seconds and then retrying.
+        (#{seconds_elapsed.round} seconds elapsed.)
       LOG
     end
   end
 
   memoize \
   def fail_exit_reason
-    if Time.now - @start_time > ::WaitForChecksRunner::MAX_TIME
+    if seconds_elapsed > ::WaitForChecksRunner::MAX_TIME
       return 'max time exceeded'
     end
 
@@ -134,6 +134,10 @@ class WaitForChecksRunner::LoopRunner
   memoize \
   def checks_output
     %x(gh pr checks "#{ENV.fetch('GH_CHECKS_BRANCH', `git rev-parse --abbrev-ref HEAD`.rstrip)}")
+  end
+
+  def seconds_elapsed
+    Time.now - @start_time
   end
 end
 
