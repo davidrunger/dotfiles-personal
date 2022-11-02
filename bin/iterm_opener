@@ -13,9 +13,9 @@ end
 # rubocop:enable Style/TopLevelMethodDefinition
 
 # debug(<<~LOG)
-#   #{file_and_line}
-#   #{absolute_path}
-#   #{dir}/#{cleaned}
+#   #{ARGV[0].inspect}
+#   #{ARGV[1].inspect}
+#   #{ARGV[2].inspect}
 # LOG
 
 dir = ARGV[0] # Example: "/Users/david/Downloads"
