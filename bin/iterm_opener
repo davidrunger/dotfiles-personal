@@ -2,16 +2,6 @@
 
 # when cmd-clicking something in iTerm, this opens the file/link/etc with an appropriate program
 
-dir = ARGV[0] # Example: "/Users/david/Downloads"
-file_and_line = ARGV[1] # Example: "file.txt:2"
-
-GIT_SHA_REGEX = %r{[a-f0-9]{40}}
-cleaned = file_and_line.sub(/^webpack:\/\/\//, '')
-cleaned.sub!(/\)$/, '')
-cleaned.sub!(%r{\A(a/|b/)}, '')
-file = cleaned.split(':').first
-absolute_path = "#{dir}/#{file}"
-
 # rubocop:disable Style/TopLevelMethodDefinition
 def debug(message)
   File.write(
@@ -27,6 +17,16 @@ end
 #   #{absolute_path}
 #   #{dir}/#{cleaned}
 # LOG
+
+dir = ARGV[0] # Example: "/Users/david/Downloads"
+file_and_line = ARGV[1] # Example: "file.txt:2"
+
+GIT_SHA_REGEX = %r{[a-f0-9]{40}}
+cleaned = file_and_line.sub(/^webpack:\/\/\//, '')
+cleaned.sub!(/\)$/, '')
+cleaned.sub!(%r{\A(a/|b/)}, '')
+file = cleaned.split(':').first
+absolute_path = "#{dir}/#{file}"
 
 if (
   file_and_line.match?(/\A:::\d{1,4}\z/) &&
