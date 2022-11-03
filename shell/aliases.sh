@@ -18,6 +18,7 @@ alias fsk='redis-cli -n 1 FLUSHDB && sk' # `-n 1` because of `config.redis = {db
 alias fx='open -a Firefox\ Developer\ Edition'
 alias ga='git add'
 alias gaa='git add -p'
+alias gac='ga . && gcom'
 alias gb='git branch -vv'
 alias gbd='git branch -D'
 alias gbdf='git branch -D $(git for-each-ref --format="%(refname:short)" refs/heads | rg -v "^(master|safe|$(git rev-parse --abbrev-ref HEAD))$" | fzf)'
