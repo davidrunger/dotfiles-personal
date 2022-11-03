@@ -135,7 +135,7 @@ class WaitForChecksRunner::LoopRunner
   memoize \
   def checks_output
     branch_name = ENV.fetch('GH_CHECKS_BRANCH', `git rev-parse --abbrev-ref HEAD`.rstrip)
-    stdout, _status = Open3.capture2("gh pr checks #{branch_name}")
+    stdout, _stderr, _status = Open3.capture3("gh pr checks #{branch_name}")
     stdout
   end
 
