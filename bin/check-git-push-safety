@@ -22,7 +22,7 @@ fi
 git diff origin/master..HEAD | rg --quiet --fixed-strings '!!!'
 if [ $? -eq 0 ]
 then
-  git diff --name-status master | cut -f2 | xargs rg --fixed-strings '!!!'
+  git diff --name-status master | cut -f2 | xargs rg --with-filename --fixed-strings '!!!'
   echo "Easy there, cowboy! You still have some markers in your code."
   exit 1
 fi
@@ -31,7 +31,7 @@ fi
 rg --quiet --fixed-strings '!!!' .env.development.local
 if [ $? -eq 0 ]
 then
-  rg --fixed-strings '!!!' .env.development.local
+  rg --with-filename --fixed-strings '!!!' .env.development.local
   echo "Easy there, cowboy! You still have some markers in your env file."
   exit 1
 fi
