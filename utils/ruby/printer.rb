@@ -11,7 +11,7 @@ class Printer
     def printing_in_place
       printer = new
       yield(printer)
-      puts if !printer.broke_out
+      puts if !printer.broke_out && @printed_something_in_place
     end
   end
 
@@ -20,10 +20,11 @@ class Printer
   def print_in_place(string)
     # https://stackoverflow.com/a/14971522/4009384
     print("\r\e[J#{string}")
+    @printed_something_in_place = true
   end
 
   def break_out
-    puts
+    puts if @printed_something_in_place
     @broke_out = true
   end
 end
