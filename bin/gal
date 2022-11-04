@@ -42,7 +42,7 @@ opts =
 class Runner
   extend Memoist
 
-  GUARDFILE_TEMPLATES = %w[run_rails run_ruby].freeze
+  GUARDS_NOT_TO_TEMPLATE = %w[run_spec].freeze
 
   def initialize(opts)
     @opts = opts
@@ -82,13 +82,13 @@ class Runner
 
   memoize \
   def guardfile_path
-    if GUARDFILE_TEMPLATES.include?(guardfile_filename)
+    if GUARDS_NOT_TO_TEMPLATE.include?(guardfile_filename)
+      dotfiles_absolute_guardfile_path
+    else
       if !File.exist?(working_directory_guardfile_path) || @opts.force_guardfile_template_copy?
         copy_dotfile_to_working_directory
       end
       working_directory_guardfile_path
-    else
-      dotfiles_absolute_guardfile_path
     end
   end
 
@@ -101,6 +101,7 @@ class Runner
   def guardfile_filename
     case (guardfile_flag = @opts[:guardfile])
     when :bash then 'run_bash'
+    when :crystal then 'run_crystal'
     when :rails then 'run_rails'
     when :ruby then 'run_ruby'
     when :spec then 'run_spec'
