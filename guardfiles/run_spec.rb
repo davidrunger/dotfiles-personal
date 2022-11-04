@@ -3,7 +3,7 @@
 require 'active_support/core_ext/string/filters'
 require 'guard/shell'
 require 'memoist'
-require '/Users/david/code/dotfiles/guardfiles/constants'
+require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 
 class RspecPrefixer
   extend Memoist
@@ -26,15 +26,6 @@ class RspecPrefixer
 end
 
 rspec_prefixer = RspecPrefixer.new
-
-# This avoids re-running specs multiple times when a file is saved multiple times while the spec(s)
-# are executing. Instead, just run once after the most recent modification.
-module RungerGuardWatcherPatches
-  def match_files(guard, files)
-    super(guard, files.uniq)
-  end
-end
-Guard::Watcher.singleton_class.prepend(RungerGuardWatcherPatches)
 
 guard(:shell, all_on_start: true) do
   # https://web.archive.org/web/20200927034139/https://github.com/guard/listen/wiki/Duplicate-directory-errors
