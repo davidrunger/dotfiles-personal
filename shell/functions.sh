@@ -109,7 +109,7 @@ gpfoh() {
   echo "Renamed to gpf"
 }
 
-# git update current commit with all uncommitted changes
+# git update current commit with all uncommitted changes (after checking we're ahead of master)
 gup() {
   if [[ $(git rev-list --right-only --count master...HEAD) -eq 0 ]]
   then
@@ -117,11 +117,15 @@ gup() {
     return 1
   fi
 
+  gupp
+}
+
+# git update current commit with all uncommitted changes (allowing updates to commits on master)
+gupp() {
   git add -A . && \
     git commit --fixup HEAD && \
     GIT_SEQUENCE_EDITOR=: git rebase --interactive --autosquash HEAD~2
 }
-
 
 # git rebase interactive
 # Enter the number of commits back that you want to go.
