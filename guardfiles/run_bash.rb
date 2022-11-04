@@ -7,11 +7,10 @@ require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 if !File.exist?('./personal/bash.sh')
   File.write(
     './personal/bash.sh',
-    <<~BASH
+    <<~BASH)
       #!/usr/bin/env bash
 
     BASH
-  )
 end
 
 FileUtils.chmod('+x', './personal/bash.sh')
