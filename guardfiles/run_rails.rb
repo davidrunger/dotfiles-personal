@@ -5,7 +5,7 @@ require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 
 guard(:shell, all_on_start: true) do
   # https://web.archive.org/web/20200927034139/https://github.com/guard/listen/wiki/Duplicate-directory-errors
-  directories(DIRECTORIES_TO_WATCH)
+  directories(GuardSupport.directories_to_watch)
 
   watch(%r{
    ^(
