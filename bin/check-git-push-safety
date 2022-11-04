@@ -28,12 +28,15 @@ then
 fi
 
 # don't push if there are still `!!!` markers in .env.development.local
-rg --quiet --fixed-strings '!!!' .env.development.local
-if [ $? -eq 0 ]
+if [ -f .env.development.local ]
 then
-  rg --with-filename --fixed-strings '!!!' .env.development.local
-  echo "Easy there, cowboy! You still have some markers in your env file."
-  exit 1
+  rg --quiet --fixed-strings '!!!' .env.development.local
+  if [ $? -eq 0 ]
+  then
+    rg --with-filename --fixed-strings '!!!' .env.development.local
+    echo "Easy there, cowboy! You still have some markers in your env file."
+    exit 1
+  fi
 fi
 
 # if all of the above checks passed, we're good to push! :)
