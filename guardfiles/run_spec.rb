@@ -3,6 +3,7 @@
 require 'active_support/core_ext/string/filters'
 require 'guard/shell'
 require 'memoist'
+require '/Users/david/code/dotfiles/guardfiles/constants'
 
 class RspecPrefixer
   extend Memoist
@@ -36,6 +37,7 @@ end
 Guard::Watcher.singleton_class.prepend(RungerGuardWatcherPatches)
 
 guard(:shell, all_on_start: true) do
+  directories(DIRECTORIES_TO_WATCH)
   ignore(%r{
     ^(
     .bundle/

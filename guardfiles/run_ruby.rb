@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'guard/shell'
+require '/Users/david/code/dotfiles/guardfiles/constants'
 
 guard(:shell, all_on_start: true) do
+  directories(DIRECTORIES_TO_WATCH)
   watch(%r{
    ^(
    personal/ruby.rb
