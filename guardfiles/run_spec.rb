@@ -60,7 +60,7 @@ guard(:shell, all_on_start: true) do
       system(<<~SH.squish)
         #{rspec_prefixer.rspec_prefix}rspec
           #{'-b' if ENV.fetch('RSPEC_BACKTRACE', nil) == '1'}
-          #{ENV.fetch('TARGET_SPEC_FILES')}
+          #{ENV.fetch('TARGET_SPEC_FILES', nil)}
       SH
     rescue => error
       pp(error)
