@@ -60,6 +60,7 @@ alias pspq='psql david_runger_development < personal/sql.sql'
 alias rc="DISABLE_SPRING=1 IS_RAILS_CONSOLE=1 bin/rails console"
 alias rgs='rg -F --max-columns 1000'
 alias rmrf='rm -rf'
+alias rmsi='rm -rf lib/ && shards install'
 alias rr='bin/rails routes'
 alias rs="bin/rails server"
 alias s.='subl && sleep 0.1 && subl .'
