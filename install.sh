@@ -6,5 +6,6 @@ ln -sf ~/code/dotfiles/irbrc.rb ~/.irbrc.rb
 ln -sf ~/code/dotfiles/pryrc.rb ~/.pryrc
 ln -sf ~/code/dotfiles/rspec ~/.rspec
 ln -sf ~/code/dotfiles/rubocop.yml ~/.rubocop.yml
-ln -sf ~/code/dotfiles/zsh-themes ~/.oh-my-zsh/custom/themes
+rm -rf ~/.oh-my-zsh/custom/themes/
+ln -sf ~/code/dotfiles/zsh/themes ~/.oh-my-zsh/custom
 ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc
