@@ -9,3 +9,7 @@ ln -sf ~/code/dotfiles/rubocop.yml ~/.rubocop.yml
 rm -rf ~/.oh-my-zsh/custom/themes/
 ln -sf ~/code/dotfiles/zsh/themes ~/.oh-my-zsh/custom
 ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc
+
+gem install specific_install
+gem specific_install davidrunger/fcom
+gem specific_install davidrunger/runger_style
