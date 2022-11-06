@@ -77,6 +77,7 @@ class Runner
       'TARGET_SPEC_FILES' => @opts.arguments.empty? ? nil : @opts.arguments.join(' '),
       'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', @opts.skip_spring? ? '1' : nil),
       'SIMPLECOV_FORCE_DETAILS' => @opts.force_coverage_detail? ? '1' : nil,
+      'GUARDFILE_TYPE' => guardfile_flag.to_s,
     }.compact
   end
 
@@ -99,7 +100,7 @@ class Runner
 
   memoize \
   def guardfile_filename
-    case (guardfile_flag = @opts[:guardfile])
+    case guardfile_flag
     when :bash then 'run_bash'
     when :crystal then 'run_crystal'
     when :rails then 'run_rails'
@@ -107,6 +108,11 @@ class Runner
     when :spec then 'run_spec'
     else raise("Unexpected guardfile flag '#{guardfile_flag}'.")
     end
+  end
+
+  memoize \
+  def guardfile_flag
+    @opts[:guardfile]
   end
 
   def copy_dotfile_to_working_directory
