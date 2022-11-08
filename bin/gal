@@ -8,6 +8,7 @@
 #   gal -g ruby -d -l
 #   gal spec/models/user_spec.rb -b -c
 
+require 'active_support/core_ext/object/blank'
 require 'amazing_print'
 require 'fileutils'
 require 'memoist'
@@ -26,6 +27,7 @@ end
 opts =
   Slop.parse do |o|
     o.symbol('-g', '--guardfile', 'guardfile flag [spec (default) | ruby | rails]', default: :spec)
+    o.string('-t', '--target', 'specify SIMPLECOV_TARGET_FILE')
     o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
     o.bool('-s', '--skip-spring', 'do not use spring')
     o.bool('-c', '--force-coverage-detail', 'print code coverage info even if 100% covered')
@@ -78,6 +80,7 @@ class Runner
       'DISABLE_SPRING' => ENV.fetch('DISABLE_SPRING', @opts.skip_spring? ? '1' : nil),
       'SIMPLECOV_FORCE_DETAILS' => @opts.force_coverage_detail? ? '1' : nil,
       'GUARDFILE_TYPE' => guardfile_flag.to_s,
+      'SIMPLECOV_TARGET_FILE' => @opts[:target].presence,
     }.compact
   end
 
