@@ -9,10 +9,17 @@
 module Runger
 end
 
-# Flipper features to always enable (since Flipper features sometimes get cleared by flushing Redis)
 if Rails.env.development?
+  # Flipper features to always enable (since Flipper sometimes get cleared by flushing Redis)
   %i[disable_prerendering].each do |feature|
     Flipper.enable(feature)
+  end
+
+  # Flipper features to always list in the UI
+  %i[automatic_user_login automatic_admin_login].each do |feature|
+    originally_enabled = Flipper.enabled?(feature)
+    Flipper.enable(feature)
+    Flipper.disable(feature) if !originally_enabled
   end
 end
 
