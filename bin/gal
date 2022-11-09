@@ -15,6 +15,14 @@ require 'memoist'
 require 'slop'
 
 module Gal
+  GUARDFILE_TYPES = %i[
+    bash
+    crystal
+    rails
+    ruby
+    spec
+  ].freeze
+
   def self.print_options(options)
     puts(
       options.to_s.dup.
@@ -26,7 +34,12 @@ end
 
 opts =
   Slop.parse do |o|
-    o.symbol('-g', '--guardfile', 'guardfile flag [spec (default) | ruby | rails]', default: :spec)
+    o.symbol(
+      '-g',
+      '--guardfile',
+      "guardfile flag [#{Gal::GUARDFILE_TYPES.join('|')}]".sub('spec', 'spec(default)'),
+      default: :spec,
+    )
     o.string('-t', '--target', 'specify SIMPLECOV_TARGET_FILE')
     o.bool('-b', '--backtrace', 'print backtrace when errors occur or tests fail')
     o.bool('-s', '--skip-spring', 'do not use spring')
@@ -103,13 +116,10 @@ class Runner
 
   memoize \
   def guardfile_filename
-    case guardfile_flag
-    when :bash then 'run_bash'
-    when :crystal then 'run_crystal'
-    when :rails then 'run_rails'
-    when :ruby then 'run_ruby'
-    when :spec then 'run_spec'
-    else raise("Unexpected guardfile flag '#{guardfile_flag}'.")
+    if guardfile_flag.in?(Gal::GUARDFILE_TYPES)
+      "run_#{guardfile_flag}"
+    else
+      raise("Unexpected guardfile flag '#{guardfile_flag}'.")
     end
   end
 
