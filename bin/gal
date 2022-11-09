@@ -116,7 +116,7 @@ class Runner
 
   memoize \
   def guardfile_filename
-    if guardfile_flag.in?(Gal::GUARDFILE_TYPES)
+    if Gal::GUARDFILE_TYPES.include?(guardfile_flag)
       "run_#{guardfile_flag}"
     else
       raise("Unexpected guardfile flag '#{guardfile_flag}'.")
