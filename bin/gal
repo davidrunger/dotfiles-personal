@@ -57,8 +57,6 @@ opts =
 class Runner
   extend Memoist
 
-  GUARDS_NOT_TO_TEMPLATE = %w[run_spec].freeze
-
   def initialize(opts)
     @opts = opts
   end
@@ -99,14 +97,10 @@ class Runner
 
   memoize \
   def guardfile_path
-    if GUARDS_NOT_TO_TEMPLATE.include?(guardfile_filename)
-      dotfiles_absolute_guardfile_path
-    else
-      if !File.exist?(working_directory_guardfile_path) || @opts.force_guardfile_template_copy?
-        copy_dotfile_to_working_directory
-      end
-      working_directory_guardfile_path
+    if !File.exist?(working_directory_guardfile_path) || @opts.force_guardfile_template_copy?
+      copy_dotfile_to_working_directory
     end
+    working_directory_guardfile_path
   end
 
   memoize \
