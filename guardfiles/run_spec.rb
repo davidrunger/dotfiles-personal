@@ -55,7 +55,9 @@ guard(:shell, all_on_start: true) do
    )
   }x) do |_|
     begin
+      # rubocop:disable Rails/TimeZone, Lint/RedundantCopDisableDirective
       start_time = Time.now
+      # rubocop:enable Rails/TimeZone, Lint/RedundantCopDisableDirective
       system('clear')
       system(<<~SH.squish)
         #{rspec_prefixer.rspec_prefix}rspec
