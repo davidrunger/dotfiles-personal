@@ -13,7 +13,7 @@ module GuardSupport
     DIRECTORIES_TO_WATCH = {
       'crystal' => %w[app personal spec src],
     }
-    DIRECTORIES_TO_WATCH.default_proc = proc { %w[app lib personal spec] }
+    DIRECTORIES_TO_WATCH.default_proc = proc { %w[app lib personal spec test] }
     DIRECTORIES_TO_WATCH.freeze
     # rubocop:enable Style/MutableConstant
 
