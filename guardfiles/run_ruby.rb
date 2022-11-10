@@ -9,8 +9,8 @@ guard(:shell, all_on_start: true) do
 
   watch(%r{
    ^(
-   personal/ruby.rb
-   )$
+   personal/ruby.rb$
+   )
   }x) do |_|
     begin
       system('clear')

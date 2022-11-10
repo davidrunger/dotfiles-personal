@@ -18,8 +18,8 @@ guard(:shell, all_on_start: true) do
 
   watch(%r{
    ^(
-   personal/crystal.cr
-   )$
+   personal/crystal.cr$
+   )
   }x) do |_|
     begin
       system('clear')

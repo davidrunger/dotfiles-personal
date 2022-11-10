@@ -21,8 +21,8 @@ guard(:shell, all_on_start: true) do
 
   watch(%r{
    ^(
-   personal/bash.sh
-   )$
+   personal/bash.sh$
+   )
   }x) do |_|
     begin
       system('clear')

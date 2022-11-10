@@ -9,8 +9,8 @@ guard(:shell, all_on_start: true) do
 
   watch(%r{
    ^(
-   personal/runner.rb
-   )$
+   personal/runner.rb$
+   )
   }x) do |_|
     begin
       system('clear', exception: true)
