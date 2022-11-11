@@ -31,16 +31,16 @@ guard(:shell, all_on_start: true) do
   # https://web.archive.org/web/20200927034139/https://github.com/guard/listen/wiki/Duplicate-directory-errors
   directories(GuardSupport.directories_to_watch)
 
-  watch(%r{
-   ^(
-   app/|
-   lib/|
-   spec/(?!fixtures/)|
-   tools/|
-   config/routes.rb$
-   )
-  }x) do |_|
+  watch(%r{^(
+    app/|
+    lib/|
+    spec/(?!fixtures/)|
+    tools/|
+    config/routes.rb$
+  )}x) do |guard_match_result|
     begin
+      match = guard_match_result.instance_variable_get(:@match_result) || '[no match]'
+      puts("Match for #{match} triggered execution.")
       # rubocop:disable Rails/TimeZone, Lint/RedundantCopDisableDirective
       start_time = Time.now
       # rubocop:enable Rails/TimeZone, Lint/RedundantCopDisableDirective
