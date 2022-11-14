@@ -13,6 +13,7 @@ alias dl='curl -O'
 alias dots='cd ~/code/dotfiles'
 alias down='cd ~/Downloads'
 alias dspec='DISABLE_SPRING=1 bin/rspec'
+alias favi='cp /Users/david/code/david_runger/public/favicon.ico ./'
 alias ffs='RAILS_ENV=test bin/rails spec:fixture_builder:rebuild'
 alias fix='git diff --name-only | uniq | xargs $EDITOR'
 alias fsk='redis-cli -n 1 FLUSHDB && sk' # `-n 1` because of `config.redis = {db: 1}` in `config/initializers/sidekiq.rb`
