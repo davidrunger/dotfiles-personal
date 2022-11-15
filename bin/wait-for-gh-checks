@@ -49,11 +49,12 @@ class WaitForChecksRunner
     when 'pallets' then 1
     when 'release_assistant' then 1
     when 'rspec_performance_summary' then 1
+    when 'rubysmith' then 0
     when 'runger_style' then 1
     when 'schedjewel' then 3
-    when 'skedjewel' then 1
     when 'shaped' then 3
     when 'simple_cov-formatter-terminal' then 3
+    when 'skedjewel' then 1
     else fail("Unknown #expected_num_passed_checks for repo '#{repo}'!")
     end
     # rubocop:enable Lint/DuplicateBranch
