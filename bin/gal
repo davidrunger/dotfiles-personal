@@ -62,12 +62,22 @@ class Runner
   end
 
   def run
+    ensure_local_script
     colored_command = "#{env_vars.map { |k, v| %(#{k}="#{v}") }.join(' ')} #{command}".blue
     puts("Running #{colored_command}")
     system(env_vars, command)
   end
 
   private
+
+  def ensure_local_script
+    return if absolute_project_local_script_info.nil?
+
+    path, content = absolute_project_local_script_info.values_at(:path, :content)
+    if !File.exist?(path)
+      File.write(path, content)
+    end
+  end
 
   memoize \
   def command
@@ -133,6 +143,50 @@ class Runner
 
   def working_directory_guardfile_directory
     "#{working_directory}/personal/guardfiles"
+  end
+
+  memoize \
+  def absolute_project_local_script_info
+    return nil if project_local_script_info.nil?
+
+    {
+      path: "#{working_directory}/personal/#{project_local_script_info[:filename]}",
+      content: project_local_script_info[:content],
+    }
+  end
+
+  memoize \
+  def project_local_script_info
+    case guardfile_flag
+    when :bash
+      {
+        filename: 'bash.sh',
+        content: <<~RUBY,
+          #!/usr/bin/env bash
+        RUBY
+      }
+    when :crystal
+      {
+        filename: 'crystal.cr',
+        content: <<~CRYSTAL,
+          p! 1 + 2
+        CRYSTAL
+      }
+    when :rails
+      {
+        filename: 'runner.rb',
+        content: <<~RUBY,
+          # frozen_string_literal: true
+        RUBY
+      }
+    when :ruby
+      {
+        filename: 'ruby.rb',
+        content: <<~RUBY,
+          # frozen_string_literal: true
+        RUBY
+      }
+    end
   end
 
   memoize \
