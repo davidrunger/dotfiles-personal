@@ -22,6 +22,7 @@ guard(:shell, all_on_start: true) do
       load('./personal/ruby.rb')
     rescue => error
       pp(error)
+      puts(error.backtrace.first(5))
     end
     puts("Ran at #{Time.now}")
   end
