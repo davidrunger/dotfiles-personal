@@ -75,6 +75,7 @@ class Runner
 
     path, content = absolute_project_local_script_info.values_at(:path, :content)
     if !File.exist?(path)
+      FileUtils.mkdir_p(working_directory_personal_directory)
       File.write(path, content)
     end
   end
@@ -142,7 +143,11 @@ class Runner
   end
 
   def working_directory_guardfile_directory
-    "#{working_directory}/personal/guardfiles"
+    "#{working_directory_personal_directory}/guardfiles"
+  end
+
+  def working_directory_personal_directory
+    "#{working_directory}/personal"
   end
 
   memoize \
