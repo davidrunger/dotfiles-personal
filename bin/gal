@@ -184,7 +184,7 @@ class Runner
         content: <<~RUBY,
           #!/usr/bin/env bash
 
-          ruby *_test.rb
+          ruby *_test.rb --pride --seed 2
         RUBY
       }
     when :rails
