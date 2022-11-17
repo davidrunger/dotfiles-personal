@@ -18,6 +18,7 @@ module Gal
   GUARDFILE_TYPES = %i[
     bash
     crystal
+    exercism
     rails
     ruby
     spec
@@ -176,6 +177,15 @@ class Runner
         content: <<~CRYSTAL,
           p! 1 + 2
         CRYSTAL
+      }
+    when :exercism
+      {
+        filename: 'run_exercism_tests.sh',
+        content: <<~RUBY,
+          #!/usr/bin/env bash
+
+          ruby *_test.rb
+        RUBY
       }
     when :rails
       {
