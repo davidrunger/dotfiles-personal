@@ -37,7 +37,7 @@ source "$HOME/.cargo/env"
 export NODE_ENV='development'
 export NVM_SYMLINK_CURRENT=true # https://stackoverflow.com/a/60063217/4009384
 export PATH=node_modules/.bin:$PATH
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; can't start with `~/`
 # Load nvm lazily! Modified slightly from:
 # https://gist.github.com/gfguthrie/9f9e3908745694c81330c01111a9d642
