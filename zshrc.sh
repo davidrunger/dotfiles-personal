@@ -36,7 +36,6 @@ source "$HOME/.cargo/env"
 # node setup
 export NODE_ENV='development'
 export NVM_SYMLINK_CURRENT=true # https://stackoverflow.com/a/60063217/4009384
-export PATH=node_modules/.bin:$PATH
 export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; can't start with `~/`
 # Load nvm lazily! Modified slightly from:
@@ -45,6 +44,7 @@ export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; c
 export PATH="$NVM_DIR/versions/node/$(<$NVM_DIR/alias/default)/bin:$PATH"
 # alias `nvm` to this one liner lazy load of the normal nvm script
 alias nvm="unalias nvm; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@"
+export PATH=node_modules/.bin:$PATH
 
 # load fzf (fuzzy searching)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
