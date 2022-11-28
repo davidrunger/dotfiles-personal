@@ -141,6 +141,12 @@ gst() {
   git branch -u origin/$(git rev-parse --abbrev-ref HEAD) 1>/dev/null 2>&1
 }
 
+# kill rubocop processes
+# (I'm making this an alias so I don't have to deal with escaping the single quotes)
+kr() {
+  ps -e | egrep rubocop | egrep -v e?grep | awk '{print $1}' | xargs kill
+}
+
 # copy my IP address to clipboard
 myip() {
   curl -s ifconfig.co -4 | rg '\A\d+\.\d+\.\d+\.\d+\z' | cpy
