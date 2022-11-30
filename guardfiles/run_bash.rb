@@ -17,6 +17,8 @@ guard(:shell, all_on_start: true) do
       #{directories_to_watch.map { "#{_1}/.*" }.join("|\n")}
     )}x
 
+  ignore(/__pycache__/)
+
   watch(watch_regex) do |guard_match_result|
     begin
       match = guard_match_result.instance_variable_get(:@match_result) || '[no match]'
