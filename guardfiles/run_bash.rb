@@ -20,6 +20,8 @@ guard(:shell, all_on_start: true) do
   ignore(/__pycache__/)
 
   watch(watch_regex) do |guard_match_result|
+    start_time = Time.now
+
     begin
       match = guard_match_result.instance_variable_get(:@match_result) || '[no match]'
       puts("Match for #{match} triggered execution.")
@@ -28,6 +30,7 @@ guard(:shell, all_on_start: true) do
     rescue => error
       pp(error)
     end
-    puts("Ran at #{Time.now}")
+
+    puts("Ran at #{Time.now} (took #{(Time.now - start_time).round(2)}s)")
   end
 end
