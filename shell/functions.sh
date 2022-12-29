@@ -71,7 +71,7 @@ gddate() { git diff `git rev-list -1 --before=\"$1\" master`..origin/master }
 # ex:
 #   gsd ae2b5a9c7c61597e34820694fed4612639274dba
 gsd() {
-  git show $1 | EXT=diff tosubl
+  git show $1 | EXT=diff tos
 }
 
 # git set upstream
@@ -170,12 +170,12 @@ sc() {
 }
 
 # receive input from stdout and open it in sublime
-# ex: `git diff | tosubl`
-tosubl() {
+# ex: `git diff | tos`
+tos() {
   TMPDIR=${TMPDIR:-/tmp}  # default to /tmp if TMPDIR isn't set
   DATE="`date +%Y%m%d%H%M%S`"
   EXT=${EXT:-}
-  F=$(mktemp $TMPDIR/tosubl-$DATE.$EXT)
+  F=$(mktemp $TMPDIR/tos-$DATE.$EXT)
   cat >| $F  # use >| instead of > if you set noclobber in bash
   subl $F
   sleep .3  # give subl a little time to open the file
