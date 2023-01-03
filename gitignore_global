@@ -32,3 +32,4 @@ Procfile.all.dev
 Procfile.most.dev
 Procfile.web.dev
 Procfile.iphone.dev
+/node_modules/
