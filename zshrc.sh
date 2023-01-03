@@ -55,3 +55,5 @@ export LESSHISTFILE=- # don't store less search history https://web.archive.org/
 
 # for SimpleCov::Formatter::Terminal
 export SIMPLECOV_WRITE_TARGET_TO_FILE=1
+
+export CUSTOM_RUBY_VERSION=3.2.0
