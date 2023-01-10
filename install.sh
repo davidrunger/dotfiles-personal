@@ -8,6 +8,7 @@ ln -sf ~/code/dotfiles/rspec ~/.rspec
 ln -sf ~/code/dotfiles/rubocop.yml ~/.rubocop.yml
 ln -sf ~/code/dotfiles/zsh/themes/bolso.zsh-theme ~/.oh-my-zsh/custom/themes/bolso.zsh-theme
 ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc
+ln -sf ~/code/dotfiles/zprofile.sh ~/.zprofile
 
 gem install amazing_print foreman guard guard-shell slop specific_install
 gem specific_install davidrunger/fcom
