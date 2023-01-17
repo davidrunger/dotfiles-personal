@@ -11,5 +11,5 @@ ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc
 ln -sf ~/code/dotfiles/zprofile.sh ~/.zprofile
 
 gem install amazing_print foreman guard guard-shell slop specific_install
-gem specific_install davidrunger/fcom
-gem specific_install davidrunger/runger_style
+# gem specific_install davidrunger/fcom
+# gem specific_install davidrunger/runger_style
