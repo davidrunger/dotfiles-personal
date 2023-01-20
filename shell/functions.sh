@@ -117,14 +117,7 @@ gup() {
     return 1
   fi
 
-  gupp
-}
-
-# git update current commit with all uncommitted changes (allowing updates to commits on master)
-gupp() {
-  git add -A . && \
-    git commit --fixup HEAD && \
-    GIT_SEQUENCE_EDITOR=: git rebase --interactive --autosquash HEAD~2
+  git add -A . && git commit --amend --no-edit
 }
 
 # git rebase interactive
