@@ -63,7 +63,7 @@ alias most='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.mo
 alias np="rg --files-with-matches 'binding\\.pry' | xargs sed -i '' -e '/binding\\.pry/d'"
 alias pspq='psql david_runger_development < personal/sql.sql'
 alias rc="DISABLE_SPRING=1 IS_RAILS_CONSOLE=1 bin/rails console"
-alias rgm='rg --max-columns 1000'
+alias rcg='rg --max-columns=1000 --context=2 --ignore-case'
 alias rgs='rg -F --max-columns 1000'
 alias rmrf='rm -rf'
 alias rmsi='rm -rf lib/ && shards install'
