@@ -2,7 +2,7 @@
 
 # stop/kill [rr]uby [p]rocesses
 
-processes_to_ignore='e?grep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks|wait-merge|open-gh-pr|Helper'
+processes_to_ignore='e?grep|Slack|Postman|GitHub|rubocop|wait-for-gh-checks|wait-merge|open-gh-pr|Helper|brew'
 processes_to_quit='ruby'
 processes_to_term='spring|[Cc]hrome'
 processes_to_int='puma|sidekiq'
