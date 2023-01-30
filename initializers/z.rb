@@ -28,7 +28,7 @@ $runger_redis = Redis.new(db: 2)
 class Runger::RungerConfig
   include Singleton
 
-  CONFIG_KEYS = %w[log_ar_trace log_expensive_queries].map(&:freeze).freeze
+  CONFIG_KEYS = %w[log_ar_trace log_expensive_queries].freeze
 
   CONFIG_KEYS.each do |config_key|
     define_method("#{config_key}?") do
