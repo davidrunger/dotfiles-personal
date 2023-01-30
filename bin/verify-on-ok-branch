@@ -6,6 +6,7 @@
 if [[
   $PWD == "/Users/david/code/dotfiles" ||
   $PWD == "/Users/david/code/playground" ||
+  $PWD == "/Users/david/code/blog" ||
   $PWD == "/Users/david/Sync/bin"
   ]]
 then
