@@ -109,9 +109,9 @@ gpfoh() {
   echo "Renamed to gpf"
 }
 
-# git update current commit with all uncommitted changes (after checking we're ahead of master)
+# git update current commit with all uncommitted changes (as long as we're ahead of origin/master)
 gup() {
-  if [[ $(git rev-list --right-only --count master...HEAD) -eq 0 ]]
+  if [[ $(git rev-list --right-only --count origin/master...HEAD) -eq 0 ]]
   then
     echo "Not committing because you are not ahead of master."
     return 1
