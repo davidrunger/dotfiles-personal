@@ -1,5 +1,6 @@
 alias all='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.all.dev'
 alias bat='bat --paging=never'
+alias blog='cd ~/code/blog'
 alias br='bin/rubocop'
 alias bs='bin/rspec'
 alias build='subl ~/code/dotfiles/personal/bin/sublime-build.sh'
