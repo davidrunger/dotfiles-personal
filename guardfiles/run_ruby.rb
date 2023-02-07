@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'guard/shell'
 require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
+require 'guard/shell'
 
 NUM_BACKTRACE_LINES_TO_PRINT = 5
 
