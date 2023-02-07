@@ -3,6 +3,8 @@
 require 'guard/shell'
 require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 
+NUM_BACKTRACE_LINES_TO_PRINT = 5
+
 guard(:shell, all_on_start: true) do
   directories_to_watch = GuardSupport.directories_to_watch
 
@@ -22,7 +24,10 @@ guard(:shell, all_on_start: true) do
       load('./personal/ruby.rb')
     rescue => error
       pp(error)
-      puts(error.backtrace.first(5))
+      puts
+      puts(error.backtrace.first(NUM_BACKTRACE_LINES_TO_PRINT))
+      puts('[...]') if error.backtrace.size > NUM_BACKTRACE_LINES_TO_PRINT
+      puts
     end
     puts("Ran at #{Time.now}")
   end
