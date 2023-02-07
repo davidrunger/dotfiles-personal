@@ -42,7 +42,7 @@ class WaitForChecksRunner
     # rubocop:disable Lint/DuplicateBranch
     case repo
     when 'active_actions' then 3
-    when 'blog' then 0
+    when 'blog' then 1
     when 'david_runger'
       dependabot_branch? ? 3 : 4
     when 'fcom' then 1
