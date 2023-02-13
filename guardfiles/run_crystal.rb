@@ -30,7 +30,7 @@ guard(:shell, all_on_start: true) do
       system('clear')
       system('crystal personal/crystal.cr', exception: true)
     rescue => error
-      pp(error)
+      pp(error) # rubocop:disable Lint/Debugger
     end
     puts("Ran at #{Time.now}")
   end

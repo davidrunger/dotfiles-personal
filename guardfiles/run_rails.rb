@@ -21,7 +21,7 @@ guard(:shell, all_on_start: true) do
       system('clear', exception: true)
       system('spring rails runner ./personal/runner.rb', exception: true)
     rescue => error
-      pp(error)
+      pp(error) # rubocop:disable Lint/Debugger
     end
     # rubocop:disable Rails/TimeZone, Lint/RedundantCopDisableDirective
     puts("Ran at #{Time.new}")

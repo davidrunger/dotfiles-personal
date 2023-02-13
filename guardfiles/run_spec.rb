@@ -51,7 +51,7 @@ guard(:shell, all_on_start: true) do
           #{ENV.fetch('TARGET_SPEC_FILES', nil)}
       SH
     rescue => error
-      pp(error)
+      pp(error) # rubocop:disable Lint/Debugger # rubocop:disable Lint/Debugger
       puts(error.message)
       puts(error.backtrace)
     end

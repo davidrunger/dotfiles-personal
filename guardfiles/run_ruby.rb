@@ -23,7 +23,7 @@ guard(:shell, all_on_start: true) do
       system('clear')
       load('./personal/ruby.rb')
     rescue => error
-      pp(error)
+      pp(error) # rubocop:disable Lint/Debugger
       puts
       puts(error.backtrace.first(NUM_BACKTRACE_LINES_TO_PRINT))
       puts('[...]') if error.backtrace.size > NUM_BACKTRACE_LINES_TO_PRINT

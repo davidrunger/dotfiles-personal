@@ -28,7 +28,7 @@ guard(:shell, all_on_start: true) do
       system('clear')
       system('./personal/bash.sh', exception: true)
     rescue => error
-      pp(error)
+      pp(error) # rubocop:disable Lint/Debugger
     end
 
     puts("Ran at #{Time.now} (took #{(Time.now - start_time).round(2)}s)")
