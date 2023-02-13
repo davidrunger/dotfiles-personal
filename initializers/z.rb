@@ -163,7 +163,7 @@ ActiveSupport::Notifications.subscribe('process_action.action_controller') do |*
 end
 
 # write ActiveRecord queries and other Rails logs in Sidekiq process to stdout in development
-if ::Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
+if Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
   puts('Logging to $stdout for Rails and ActiveRecord in Sidekiq process')
 
   Rails.logger =
