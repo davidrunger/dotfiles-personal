@@ -213,7 +213,7 @@ class Array
   end
 
   def rgcb
-    each_with_object(Hash.new(0)) { |e, h| h[e] += 1 ; h }.sort_by { |_key, value| -1 * value }.to_h
+    each_with_object(Hash.new(0)) { |e, h| h[e] += 1 ; h }.sort_by { |_key, value| value * -1 }.to_h
   end
 end
 
