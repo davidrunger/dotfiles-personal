@@ -6,7 +6,7 @@ set -euo pipefail
 
 run_rubocop() {
   set +x
-  echo "Linting git-tracked rubocop files"
+  echo 'Running bin/rubocop $(git ls-tree -r HEAD --name-only) --force-exclusion'
   bin/rubocop $(git ls-tree -r HEAD --name-only) --force-exclusion
   set -x
 }
