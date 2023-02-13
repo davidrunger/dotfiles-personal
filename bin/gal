@@ -58,6 +58,41 @@ opts =
 class Runner
   extend Memoist
 
+  PROJECT_LOCAL_SCRIPT_INFOS = {
+    bash: {
+      filename: 'bash.sh',
+      content: <<~RUBY,
+        #!/usr/bin/env bash
+      RUBY
+    },
+    crystal: {
+      filename: 'crystal.cr',
+      content: <<~CRYSTAL,
+        p! 1 + 2
+      CRYSTAL
+    },
+    exercism: {
+      filename: 'run_exercism_tests.sh',
+      content: <<~RUBY,
+        #!/usr/bin/env bash
+
+        ruby *_test.rb --pride --seed 2
+      RUBY
+    },
+    rails: {
+      filename: 'runner.rb',
+      content: <<~RUBY,
+        # frozen_string_literal: true
+      RUBY
+    },
+    ruby: {
+      filename: 'ruby.rb',
+      content: <<~RUBY,
+        # frozen_string_literal: true
+      RUBY
+    },
+  }.freeze
+
   def initialize(opts)
     @opts = opts
   end
@@ -163,45 +198,7 @@ class Runner
 
   memoize \
   def project_local_script_info
-    case guardfile_flag
-    when :bash
-      {
-        filename: 'bash.sh',
-        content: <<~RUBY,
-          #!/usr/bin/env bash
-        RUBY
-      }
-    when :crystal
-      {
-        filename: 'crystal.cr',
-        content: <<~CRYSTAL,
-          p! 1 + 2
-        CRYSTAL
-      }
-    when :exercism
-      {
-        filename: 'run_exercism_tests.sh',
-        content: <<~RUBY,
-          #!/usr/bin/env bash
-
-          ruby *_test.rb --pride --seed 2
-        RUBY
-      }
-    when :rails
-      {
-        filename: 'runner.rb',
-        content: <<~RUBY,
-          # frozen_string_literal: true
-        RUBY
-      }
-    when :ruby
-      {
-        filename: 'ruby.rb',
-        content: <<~RUBY,
-          # frozen_string_literal: true
-        RUBY
-      }
-    end
+    PROJECT_LOCAL_SCRIPT_INFOS[guardfile_flag]
   end
 
   memoize \
