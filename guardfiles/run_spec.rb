@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 require 'active_support/core_ext/string/filters'
 require 'guard/shell'
 require 'memoist'
-require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 
 class RspecPrefixer
   extend Memoist

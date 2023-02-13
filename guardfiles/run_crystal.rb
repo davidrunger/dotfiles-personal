@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
+require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 require 'fileutils'
 require 'guard/shell'
-require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
 
 if !File.exist?('./personal/crystal.cr')
   File.write(

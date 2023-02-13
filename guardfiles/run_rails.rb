@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'guard/shell'
 require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
+require 'guard/shell'
 
 guard(:shell, all_on_start: true) do
   directories_to_watch = GuardSupport.directories_to_watch

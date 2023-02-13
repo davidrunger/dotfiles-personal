@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require '/Users/david/code/dotfiles/utils/ruby/load_gem.rb'
 require '/Users/david/code/dotfiles/guardfiles/support/monkeypatch_guard.rb'
+require '/Users/david/code/dotfiles/utils/ruby/load_gem.rb'
 
 load_gem 'memoist' if !defined?(Memoist)
 
