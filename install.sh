@@ -11,6 +11,8 @@ ln -sf ~/code/dotfiles/zprofile.sh ~/.zprofile
 ln -sf ~/code/dotfiles/zsh/themes/bolso.zsh-theme ~/.oh-my-zsh/custom/themes/bolso.zsh-theme
 ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc
 
+touch ~/.hushlogin
+
 gem install amazing_print dokku-cli foreman guard guard-shell slop specific_install
 # gem specific_install davidrunger/fcom
 # gem specific_install davidrunger/runger_style
