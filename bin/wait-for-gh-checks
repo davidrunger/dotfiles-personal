@@ -54,7 +54,7 @@ class WaitForChecksRunner
     when 'runger_style' then 1
     when 'schedjewel' then 3
     when 'shaped' then 3
-    when 'simple_cov-formatter-terminal' then 3
+    when 'simple_cov-formatter-terminal' then 4
     when 'skedjewel' then 1
     else fail("Unknown #expected_num_passed_checks for repo '#{repo}'!")
     end
