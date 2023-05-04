@@ -21,5 +21,4 @@ gem install \
   guard \
   guard-shell \
   runger_style \
-  slop \
-  specific_install
+  slop
