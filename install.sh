@@ -13,6 +13,5 @@ ln -sf ~/code/dotfiles/zshrc.sh ~/.zshrc
 
 touch ~/.hushlogin
 
-gem install amazing_print dokku-cli foreman guard guard-shell slop specific_install
-# gem specific_install davidrunger/fcom
+gem install amazing_print dokku-cli fcom foreman guard guard-shell slop specific_install
 # gem specific_install davidrunger/runger_style
