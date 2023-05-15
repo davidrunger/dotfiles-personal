@@ -82,6 +82,7 @@ alias sha='git log master --format=format:%H | head -n 1 | cut -c1-7 | cpy'
 alias sk="bin/sidekiq"
 alias sn='subl ~/Sync/notes'
 alias ss='bin/spring stop'
+alias td='s $HOME/code/david_runger/personal/TODO.md'
 alias vds='bin/vite dev'
 alias vdsd='bin/vite dev --debug --trace-deprecation'
 alias web='FORCE_COLOR=1 foreman start -f Procfile.web.dev'
