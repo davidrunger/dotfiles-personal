@@ -26,7 +26,7 @@ cleaned = file_and_line.sub(/^webpack:\/\/\//, '')
 cleaned.sub!(/\)$/, '')
 cleaned.sub!(%r{\A(a/|b/)}, '')
 file = cleaned.split(':').first
-absolute_path = "#{dir}/#{file}"
+absolute_path = file.start_with?("#{dir}/") ? file : "#{dir}/#{file}"
 
 if (
   file_and_line.match?(/\A:::\d{1,4}\z/) &&
