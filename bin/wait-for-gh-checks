@@ -41,7 +41,6 @@ class WaitForChecksRunner
   def expected_num_passed_checks
     # rubocop:disable Lint/DuplicateBranch
     case repo
-    when 'active_actions' then 3
     when 'blog' then 1
     when 'david_runger'
       dependabot_branch? ? 3 : 4
@@ -51,6 +50,7 @@ class WaitForChecksRunner
     when 'release_assistant' then 1
     when 'rspec_performance_summary' then 1
     when 'rubysmith' then 0
+    when 'runger_actions' then 3
     when 'runger_style' then 1
     when 'schedjewel' then 3
     when 'shaped' then 3
