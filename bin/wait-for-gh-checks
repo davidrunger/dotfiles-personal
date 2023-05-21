@@ -125,7 +125,7 @@ class WaitForChecksRunner::LoopRunner
       return 'max time exceeded'
     end
 
-    if checks_output.match?(/^(build|test|Ruby \d+\.\d+\.\d+)\s+fail/)
+    if checks_output.match?(/(build|test|Ruby \d+\.\d+\.\d+).*\s+fail/)
       'tests failed'
     end
   end
