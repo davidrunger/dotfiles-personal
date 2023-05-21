@@ -45,8 +45,7 @@ gfco() {
 
 # git fetch and check out new branch with specified name
 gfcob() {
-  BRANCH=origin/${2:-master}
-  git fetch && git co -b $1 $BRANCH
+  git fetch && git checkout -b $1 origin/${2:-$(main-branch)}
 }
 
 # git fetch from origin and rebase updates from master
