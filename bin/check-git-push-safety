@@ -2,6 +2,8 @@
 
 # make sure that we're on a branch that's okay to push and that there isn't any debugging code etc
 
+set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+
 verify-on-ok-branch
 if [ $? -ne 0 ]
 then
@@ -19,10 +21,10 @@ then
 fi
 
 # don't push if there are still `!!!` markers in the code
-git diff origin/master..HEAD | rg --quiet --fixed-strings '!!!'
+git diff origin/$(main-branch)..HEAD | rg --quiet --fixed-strings '!!!'
 if [ $? -eq 0 ]
 then
-  git diff --name-status master | cut -f2 | xargs rg --with-filename --fixed-strings '!!!'
+  git diff --name-status $(main-branch) | cut -f2 | xargs rg --with-filename --fixed-strings '!!!'
   echo "Easy there, cowboy! You still have some markers in your code."
   exit 1
 fi
