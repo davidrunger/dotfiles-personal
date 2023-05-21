@@ -50,7 +50,7 @@ gfcob() {
 
 # git fetch from origin and rebase updates from master
 gform() {
-  git fetch --no-tags --quiet origin && git fetch --no-tags --quiet origin master:master && git rebase origin/master
+  git fetch --no-tags --quiet origin && git fetch --no-tags --quiet origin $(main-branch):$(main-branch) && git rebase origin/$(main-branch)
   gst
 }
 
