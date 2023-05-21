@@ -20,9 +20,6 @@ build_ctags() {
   fi
 }
 
-# create an alias
-cheat() { echo "alias $1='$2'" >> ~/code/dotfiles/shell/aliases.sh && source ~/.zshrc }
-
 # copy text to clipboard
 cpy() {
   TEXT=$(</dev/stdin)

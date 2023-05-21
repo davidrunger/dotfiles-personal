@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Create an executable.
+#
+# Usage:
+#    $ cheat sayhey 'echo "hi there!"'
+#    Then this works:
+#    sayhey #=> prints "Hi there!"
+
+set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+
+dotfiles="$HOME/code/dotfiles"
+file_path="$dotfiles/bin/$1"
+touch $file_path
+chmod a+x $file_path
+
+echo '#!/usr/bin/env bash' > $file_path
+echo "" >> $file_path
+echo "$2" >> $file_path
+
+$EDITOR $dotfiles
+$EDITOR $file_path
