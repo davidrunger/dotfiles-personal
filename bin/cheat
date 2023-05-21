@@ -7,7 +7,7 @@
 #    Then this works:
 #    sayhey #=> prints "Hi there!"
 
-set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+set -eo pipefail # exit on any error, pass errors through pipes
 
 dotfiles="$HOME/code/dotfiles"
 file_path="$dotfiles/bin/$1"
