@@ -51,6 +51,7 @@ class WaitForChecksRunner
     when 'rspec_performance_summary' then 1
     when 'rubysmith' then 0
     when 'runger_actions' then 3
+    when 'runger_email_reply_trimmer' then 1
     when 'runger_style' then 1
     when 'schedjewel' then 3
     when 'shaped' then 3
