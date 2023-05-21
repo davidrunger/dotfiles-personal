@@ -4,4 +4,5 @@
 
 set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
 
-(git branch | rg 'main|master|trunk' --only-matching) || (echo 'no-main-branch-found' && exit 1)
+(git branch | rg ' (main|master|trunk)$' --only-matching | sed 's/^[[:space:]]*//') || \
+  (echo 'no-main-branch-found' && exit 1)
