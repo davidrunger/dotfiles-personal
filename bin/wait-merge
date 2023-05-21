@@ -8,11 +8,11 @@ export GH_CHECKS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 wait-for-gh-checks
 gh pr merge "$GH_CHECKS_BRANCH" --squash
 say -v Rishi "P R merged"
-git fetch --no-tags --quiet origin master:master
+git fetch --no-tags --quiet origin $(main-branch):$(main-branch)
 
 # update "safe" branch as long as it's not checked out (which causes an update attempt to error)
 if [[ "$(git rev-parse --abbrev-ref HEAD)" != "safe" ]]; then
-  git fetch --no-tags --quiet origin master:safe
+  git fetch --no-tags --quiet origin $(main-branch):safe
 fi
 
 # switch to "safe" branch if still on the local branch that was just merged
