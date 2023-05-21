@@ -2,6 +2,8 @@
 
 # "git push force"
 
+set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+
 check-git-push-safety
 if [ $? -ne 0 ]
 then
