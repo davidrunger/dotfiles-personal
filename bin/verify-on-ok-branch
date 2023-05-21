@@ -2,6 +2,8 @@
 
 # make sure that we are on a branch that it's okay to commit to directly
 
+set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+
 # commits to master are allowed for some projects
 if [[
   $PWD == "/Users/david/code/dotfiles" ||
