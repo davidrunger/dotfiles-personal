@@ -107,9 +107,9 @@ gpfoh() {
 
 # git update current commit with all uncommitted changes (as long as we're ahead of origin/master)
 gup() {
-  if [[ $(git rev-list --right-only --count origin/master...HEAD) -eq 0 ]]
+  if [[ $(git rev-list --right-only --count origin/$(main-branch)...HEAD) -eq 0 ]]
   then
-    echo "Not committing because you are not ahead of origin/master."
+    echo "Not committing because you are not ahead of origin/$(main-branch)."
     return 1
   fi
 
