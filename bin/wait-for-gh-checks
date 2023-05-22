@@ -47,11 +47,11 @@ class WaitForChecksRunner
     when 'fcom' then 1
     when 'living_document' then 3
     when 'pallets' then 1
-    when 'release_assistant' then 1
     when 'rspec_performance_summary' then 1
     when 'rubysmith' then 0
     when 'runger_actions' then 3
     when 'runger_email_reply_trimmer' then 1
+    when 'runger_release_assistant' then 1
     when 'runger_style' then 1
     when 'schedjewel' then 3
     when 'shaped' then 3
