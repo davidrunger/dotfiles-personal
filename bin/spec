@@ -48,7 +48,7 @@ elif [[ $PWD =~ /shaped$ ]] ; then
   set -x
   run_rubocop
   bin/rspec
-elif [[ $PWD =~ /release_assistant$ ]] ; then
+elif [[ $PWD =~ /runger_release_assistant$ ]] ; then
   set -x
   run_rubocop
   bin/rspec
