@@ -70,7 +70,7 @@ class Runger::RungerConfig
     max_key_length = CONFIG_KEYS.map(&:size).max
     CONFIG_KEYS.sort.map do |key|
       value = setting_in_redis(key)
-      puts("#{key.ljust(max_key_length + 1).yellow}: #{value ? value.to_s.green : value.to_s.red}")
+      puts("#{AmazingPrint::Colors.yellow(key.ljust(max_key_length + 1))}: #{value ? AmazingPrint::Colors.green(value.to_s) : AmazingPrint::Colors.red(value.to_s)}")
     end
     nil
   end
@@ -133,12 +133,12 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
 
   if log_ar_trace
     puts
-    puts("#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}".blue)
+    puts(AmazingPrint::Colors.blue("#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}"))
     puts(<<~LOG.squish)
-      ^ the above query (took #{(finish - start).round(3).to_s.red} sec)
+      ^ the above query (took #{AmazingPrint::Colors.red((finish - start).round(3).to_s)} sec)
       was triggered by the below stack trace \\/
     LOG
-    puts(david_runger_caller_lines_until_logging.map(&:yellow))
+    puts(david_runger_caller_lines_until_logging.map { AmazingPrint::Colors.yellow(_1) })
     puts("#{'-' * 100}\n")
   end
 end
@@ -153,9 +153,9 @@ ActiveSupport::Notifications.subscribe('process_action.action_controller') do |*
 
   puts("\nMost expensive queries:")
   $runger_expensive_queries.sort.last(3).each do |time, (query, backtrace)|
-    puts("#{time.round(3).to_s.red} seconds")
-    puts(query.blue)
-    puts(backtrace.map(&:yellow))
+    puts("#{AmazingPrint::Colors.red(time.round(3).to_s)} seconds")
+    puts(AmazingPrint::Colors.blue(query))
+    puts(backtrace.map { AmazingPrint::Colors.yellow(_1) })
     puts
   end
 
@@ -257,7 +257,7 @@ class Rollbar::Notifier
 
     def header(level)
       color = color(level)
-      "Rollbar #{level}:".public_send(color)
+      AmazingPrint::Colors.public_send(color, "Rollbar #{level}:")
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
