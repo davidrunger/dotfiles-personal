@@ -8,9 +8,9 @@ module CopyUtils
     str = (input || self).to_s
     IO.popen('pbcopy', 'w') { |f| f << str }
     if str.size < 100
-      puts("Copied '#{str}' to clipboard.".green)
+      puts(AmazingPrint::Colors.green("Copied '#{str}' to clipboard."))
     else
-      puts("Copied #{str.size} characters to clipboard.".green)
+      puts(AmazingPrint::Colors.green("Copied #{str.size} characters to clipboard."))
     end
     true
   end
