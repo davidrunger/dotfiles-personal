@@ -99,7 +99,9 @@ class Runner
 
   def run
     ensure_local_script
-    colored_command = "#{env_vars.map { |k, v| %(#{k}="#{v}") }.join(' ')} #{command}".blue
+    colored_command = AmazingPrint::Colors.blue(
+      "#{env_vars.map { |k, v| %(#{k}="#{v}") }.join(' ')} #{command}",
+    )
     puts("Running #{colored_command}")
     system(env_vars, command)
   end
