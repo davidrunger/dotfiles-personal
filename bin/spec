@@ -11,7 +11,7 @@ run_rubocop() {
   set -x
 }
 
-if [[ $PWD =~ /active_actions$ ]] ; then
+if [[ $PWD =~ /runger_actions$ ]] ; then
   set -x
   run_rubocop
   bin/rspec
