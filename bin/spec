@@ -38,7 +38,7 @@ elif [[ $PWD =~ /heat$ ]] ; then
   bin/rspec
 elif [[ $PWD =~ /living_document$ ]] ; then
   set -x
-  bin/rubocop --format clang
+  run_rubocop
   bin/rspec --format progress --force-color
 elif [[ $PWD =~ /rspec_performance_summary$ ]] ; then
   set -x
