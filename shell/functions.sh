@@ -72,7 +72,7 @@ gsd() {
 
 # git set upstream
 gsup() {
-  UPSTREAM_NAME=${${1:-master}//origin\/}
+  UPSTREAM_NAME=${${1:-$(main-branch)}//origin\/}
   UPSTREAM=origin/$UPSTREAM_NAME
   git branch --set-upstream-to=$UPSTREAM
   git status -sb
