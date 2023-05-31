@@ -20,7 +20,7 @@ class Authenticator
     if backup_codes_exist? || BACKUP_CODES_NOT_REQUIRED_SERVICES.include?(service)
       cpp(auth_code)
     else
-      puts("First, save backup codes at #{backup_codes_path} !".red)
+      puts(AmazingPrint::Colors.red("First, save backup codes at #{backup_codes_path} !"))
     end
   end
 
