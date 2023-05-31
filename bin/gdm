@@ -2,8 +2,8 @@
 
 # '[g]it [d]elete [m]erged branches'
 
-git fetch --no-tags --quiet origin master:master
-git checkout --quiet master &&
-  git branch --merged | egrep -v "(\*|master|safe)" | xargs -n 1 git branch -d &&
+git fetch --no-tags --quiet origin $(main-branch):$(main-branch)
+git checkout --quiet $(main-branch) &&
+  git branch --merged | egrep -v "(\*|$(main-branch)|safe)" | xargs -n 1 git branch -d &&
   git checkout --quiet -
 git remote prune origin
