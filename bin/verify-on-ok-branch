@@ -6,13 +6,13 @@ set -euo pipefail # exit on any error, don't allow undefined variables, pass err
 
 # commits to master are allowed for some projects
 if [[
+  $PWD == "$HOME/.config/nvim" ||
   $PWD == "/Users/david/code/dotfiles" ||
   $PWD == "/Users/david/code/playground" ||
   $PWD == "/Users/david/code/blog" ||
   $PWD == "/Users/david/code/okcupid" ||
   $PWD == "/Users/david/Sync/bin"
-  ]]
-then
+]]; then
   exit 0
 fi
 
