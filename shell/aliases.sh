@@ -62,6 +62,7 @@ alias hwm='hpr && echo && wm'
 alias iphone='FORCE_COLOR=1 foreman start -f Procfile.iphone.dev'
 alias md='mkdir -p'
 alias most='redis-cli -n 1 FLUSHDB && FORCE_COLOR=1 foreman start -f Procfile.most.dev'
+alias n='nvim'
 alias np="rg --files-with-matches 'binding\\.pry' | xargs sed -i '' -e '/binding\\.pry/d'"
 alias pspq='psql david_runger_development < personal/sql.sql'
 alias rc="DISABLE_SPRING=1 IS_RAILS_CONSOLE=1 bin/rails console"
