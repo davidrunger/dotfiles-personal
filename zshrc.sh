@@ -2,7 +2,7 @@
 . ~/code/dotfiles/shell/functions.sh
 
 setopt +o nomatch # https://unix.stackexchange.com/a/310553/276727
-export EDITOR='nvim'
+export EDITOR='neovide'
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="bolso"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=black" # this "black" actually comes out gray
