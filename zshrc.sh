@@ -14,7 +14,8 @@ source /usr/local/opt/git-extras/share/git-extras/git-extras-completion.zsh
 # path setup
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin"
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
-export PATH=$HOME/bin:$HOME/code/dotfiles/bin:$HOME/Sync/bin:$PATH
+export PATH="$HOME/bin:$HOME/code/dotfiles/bin:$HOME/Sync/bin:$PATH"
+export PATH="$PATH:/Applications/kitty.app/Contents/MacOS/"
 
 # ruby setup
 export PATH=$HOME/.rbenv/bin:$PATH
