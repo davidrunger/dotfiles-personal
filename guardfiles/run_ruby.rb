@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require '/Users/david/code/dotfiles/guardfiles/support/guard_support'
+require_relative "#{Dir.home}/code/dotfiles/guardfiles/support/guard_support"
 require 'guard/shell'
 
 NUM_BACKTRACE_LINES_TO_PRINT = 5
