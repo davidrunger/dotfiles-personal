@@ -121,6 +121,8 @@ class WaitForChecksRunner::LoopRunner
 
   memoize \
   def fail_exit_reason
+    return nil if seconds_elapsed < 10
+
     if seconds_elapsed > ::WaitForChecksRunner::MAX_TIME
       return 'max time exceeded'
     end
