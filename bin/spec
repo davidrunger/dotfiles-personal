@@ -67,6 +67,9 @@ elif [[ $PWD =~ /dotfiles$ ]] ; then
   set -x
   rubocop
   rspec
+elif [[ $PWD =~ /redlock-rb$ ]] ; then
+  set -x
+  bundle exec rspec
 else
   echo 'Unknown directory!'
   exit 1
