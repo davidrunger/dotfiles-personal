@@ -3,6 +3,7 @@
 
 # wait for all expected GitHub checks to pass
 
+require 'active_support'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/core_ext/string/filters'
 require 'forwardable'

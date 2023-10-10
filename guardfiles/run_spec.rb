@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "#{Dir.home}/code/dotfiles/guardfiles/support/guard_support"
+require 'active_support'
 require 'active_support/core_ext/string/filters'
 require 'guard/shell'
 require 'memoist'

@@ -8,6 +8,7 @@
 #   gal -g ruby -d -l
 #   gal spec/models/user_spec.rb -b -c
 
+require 'active_support'
 require 'active_support/core_ext/object/blank'
 require 'amazing_print'
 require 'fileutils'
