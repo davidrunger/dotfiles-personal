@@ -2,7 +2,7 @@
 . ~/code/dotfiles/shell/functions.sh
 
 setopt +o nomatch # https://unix.stackexchange.com/a/310553/276727
-export EDITOR='nvim'
+export EDITOR='lvim'
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="bolso"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=black" # this "black" actually comes out gray
@@ -16,6 +16,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin"
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 export PATH="$HOME/bin:$HOME/code/dotfiles/bin:$HOME/Sync/bin:$PATH"
 export PATH="$PATH:/Applications/kitty.app/Contents/MacOS/"
+export PATH=/Users/david/.local/bin:$PATH
 
 # ruby setup
 export PATH=$HOME/.rbenv/bin:$PATH
