@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Returns the name of the primary branch in a repo.
-
-set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
-
-(git branch | rg ' (main|master|trunk)$' --only-matching | sed 's/^[[:space:]]*//') || \
-  (echo 'no-main-branch-found' && exit 1)

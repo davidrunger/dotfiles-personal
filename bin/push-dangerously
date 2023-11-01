@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# push to git without running any checks
-
-git push -fu origin HEAD

@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-# stop/kill [r]uby and other [p]rocesses (specifically node processes, such as a vite dev server)
-
-source ~/code/dotfiles/bin/rrp
-
-processes_to_int+="|node"
-
-stop_processes

@@ -4,7 +4,7 @@
 # Example usage:
 #     auth github #=> copies two-factor authentication code for GitHub login to clipboard
 
-require_relative '../utils/ruby/copy_utils.rb'
+require_relative "#{Dir.home}/code/dotfiles/utils/ruby/copy_utils.rb"
 
 require 'memoist'
 
