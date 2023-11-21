@@ -1,3 +1,5 @@
+. ~/code/dotfiles-personal/shell/aliases.sh
+
 # path setup
 export PATH="$HOME/code/dotfiles-personal/bin:$PATH"
 
