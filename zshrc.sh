@@ -10,3 +10,5 @@ export NVM_DIR="/Users/david/.nvm" # must be an absolute path for some reason; c
 # add our default nvm node (`nvm alias default v10.16.0`) to path without loading nvm
 # alias `nvm` to this one liner lazy load of the normal nvm script
 alias nvm="unalias nvm; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@"
+
+export EDITOR=subl
