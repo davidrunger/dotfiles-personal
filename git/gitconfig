@@ -1,0 +1,5 @@
+[core]
+  editor = subl -n -w
+[user]
+  email = davidjrunger@gmail.com
+  name = David Runger
