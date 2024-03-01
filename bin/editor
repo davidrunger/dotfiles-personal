@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Open a file in Sublime Text.
+
+set -euo pipefail # exit on any error, don't allow undefined variables, pipes don't swallow errors
+
+# NOTE: To work with iterm_opener, the `subl` executable must be an absolute path.
+/Users/david/code/dotfiles-personal/bin/subl "$@"
