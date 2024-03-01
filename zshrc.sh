@@ -1,5 +1,3 @@
-. ~/code/dotfiles-personal/shell/aliases.sh
-
 . "$HOME/.asdf/asdf.sh"
 
 # path setup
