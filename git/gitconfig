@@ -1,5 +1,5 @@
 [core]
-  editor = subl -n -w
+  editor = code --wait
 [credential]
   username = davidrunger
 [user]
