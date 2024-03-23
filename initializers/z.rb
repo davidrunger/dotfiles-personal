@@ -31,18 +31,18 @@ class Runger::RungerConfig
   CONFIG_KEYS = %w[log_ar_trace log_expensive_queries].freeze
 
   CONFIG_KEYS.each do |config_key|
-    define_method("#{config_key}?") do
+    define_method(:"#{config_key}?") do
       unless $runger_config_last_memoized_at && $runger_config_last_memoized_at >= 1.second.ago
         memoize_settings_from_redis
       end
-      instance_variable_get("@#{config_key}")
+      instance_variable_get(:"@#{config_key}")
     end
   end
 
   def memoize_settings_from_redis
     $runger_config_last_memoized_at = Time.current
     CONFIG_KEYS.each do |config_key|
-      instance_variable_set("@#{config_key}", setting_in_redis(config_key))
+      instance_variable_set(:"@#{config_key}", setting_in_redis(config_key))
     end
   end
 
@@ -63,14 +63,14 @@ class Runger::RungerConfig
   end
 
   def setting(key)
-    instance_variable_get("@#{key}")
+    instance_variable_get(:"@#{key}")
   end
 
   def print_config
     max_key_length = CONFIG_KEYS.map(&:size).max
     CONFIG_KEYS.sort.map do |key|
       value = setting_in_redis(key)
-      puts("#{AmazingPrint::Colors.yellow(key.ljust(max_key_length + 1))}: #{value ? AmazingPrint::Colors.green(value.to_s) : AmazingPrint::Colors.red(value.to_s)}")
+      puts("#{key.ljust(max_key_length + 1).yellow}: #{value ? value.to_s.green : value.to_s.red}")
     end
     nil
   end
@@ -87,19 +87,19 @@ def show_runger_config
 end
 
 Runger::RungerConfig::CONFIG_KEYS.each do |runger_config_key|
-  define_method("#{runger_config_key}!") do
+  define_method(:"#{runger_config_key}!") do
     Runger.config.set_in_redis(runger_config_key, true)
     show_runger_config
     true
   end
 
-  define_method("un#{runger_config_key}!") do
+  define_method(:"un#{runger_config_key}!") do
     Runger.config.set_in_redis(runger_config_key, false)
     show_runger_config
     true
   end
 
-  define_method("with_#{runger_config_key}") do |&block|
+  define_method(:"with_#{runger_config_key}") do |&block|
     original_value = Runger.config.setting_in_redis(runger_config_key)
     Runger.config.set_in_redis(runger_config_key, true, clear_memo: true)
 
@@ -133,7 +133,7 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
 
   if log_ar_trace
     puts
-    puts(AmazingPrint::Colors.blue("#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}"))
+    puts("#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}".blue)
     puts(<<~LOG.squish)
       ^ the above query (took #{AmazingPrint::Colors.red((finish - start).round(3).to_s)} sec)
       was triggered by the below stack trace \\/
@@ -164,7 +164,7 @@ end
 
 # write ActiveRecord queries and other Rails logs in Sidekiq process to stdout in development
 if Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
-  puts('Logging to $stdout for Rails and ActiveRecord in Sidekiq process')
+  puts('Logging to $stdout for Rails and ActiveRecord in Sidekiq process.')
 
   Rails.logger =
     ActiveSupport::Logger.new($stdout).
@@ -173,14 +173,98 @@ if Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
   ActiveRecord::Base.logger =
     ActiveSupport::Logger.new($stdout).
       tap { |logger| logger.formatter = ActiveSupport::Logger::SimpleFormatter.new }
+
+  puts('Improving Sidekiq logging.')
+
+  require 'sidekiq/job_logger'
+  require 'sidekiq/logger'
+
+  module RungerSidekiqLoggerPatches
+    def info(message = '')
+      color =
+        case message
+        when 'start' then :yellow
+        when 'done' then :green
+        when 'fail' then :red
+        else :whiteish
+        end
+
+      if message == 'start'
+        puts(
+          ((pattern = ' ▿ ') * (Integer(`tput cols`.rstrip) / pattern.size)).
+            public_send(color),
+        )
+      end
+
+      super(AmazingPrint::Colors.public_send(color, message))
+
+      if message == 'done'
+        puts(
+          "#{(pattern = ' ▵ ') * (Integer(`tput cols`.rstrip) / pattern.size)}\n\n".
+            public_send(color),
+        )
+      end
+
+      if message == 'fail'
+        Thread.new do
+          # Give some time for exception to be printed.
+          sleep(0.1)
+
+          puts(
+            "#{(pattern = ' ! ') * (Integer(`tput cols`.rstrip) / pattern.size)}\n\n".
+              public_send(color),
+          )
+        end
+      end
+    end
+  end
+
+  module SidekiqExt; end
+
+  class SidekiqExt::JobLogger < Sidekiq::JobLogger
+    # This is basically copy-pasted from the Sidekiq source code, but we are adding
+    # `:queue` and `:args` to `Sidekiq::Context` so that they'll be logged.
+    def call(item, queue)
+      start = ::Process.clock_gettime(::Process::CLOCK_MONOTONIC)
+      Sidekiq::Context.add(:queue, queue)
+      json = JSON.dump(item['args'])
+      Sidekiq::Context.add(
+        :args,
+        AmazingPrint::Colors.cyan(json.size <= 140 ? json : "#{json[0...140]}...]"),
+      )
+      @logger.info('start')
+
+      yield
+
+      Sidekiq::Context.add(:elapsed, elapsed(start))
+      @logger.info('done')
+      # rubocop:disable Lint/RescueException
+      # This is what the Sidekiq source code does, so we'll do it here, too.
+    rescue Exception
+      # rubocop:enable Lint/RescueException
+      Sidekiq::Context.add(:elapsed, elapsed(start))
+      @logger.info('fail')
+
+      raise
+    end
+  end
+
+  Sidekiq.configure_server do |config|
+    if ENV['REDIS_DATABASE_NUMBER'] == '3'
+      config.logger = nil
+    else
+      Sidekiq::Logger.prepend(RungerSidekiqLoggerPatches)
+      config[:job_logger] = SidekiqExt::JobLogger
+    end
+  end
 end
 
-def skip_for!(seconds) ;
-  $stop_skipping_at = seconds.seconds.from_now ;
+def skip_for!(seconds)
+  $stop_skipping_at = seconds.seconds.from_now
 end
 
-def d ;
-  system('clear') ;
+def d
+  system('clear')
 end
 
 module FixtureBuilder
