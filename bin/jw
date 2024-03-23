@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# [j]avascript [w]atch
+
+set -euo pipefail # exit on any error, don't allow undefined variables, pipes don't swallow errors
+
+if [[ $PWD =~ /david_runger$ ]] ; then
+  bin/vite dev
+else
+  echo 'Unknown directory!'
+  exit 1
+fi
