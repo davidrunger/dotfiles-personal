@@ -2,7 +2,17 @@
 
 # This is a Rails initializer with various patches/utilities that improve the Rails development
 # experience. It's called `z.rb` so that it runs after all other initializers (since they are
-# executed alphatebically).
+# executed alphabetically).
+
+if defined?(Pry)
+  # Load the pry enhancements defined in `pryrc.rb` of dotfiles repo.
+  load("#{Dir.home}/.pryrc")
+end
+
+if defined?(IRB)
+  # Load the IRB enhancements defined in `irbrc.rb` of dotfiles repo.
+  load("#{Dir.home}/.irbrc.rb")
+end
 
 # :nocov:
 # rubocop:disable Style/TopLevelMethodDefinition
