@@ -14,6 +14,10 @@ if defined?(IRB)
   load("#{Dir.home}/.irbrc.rb")
 end
 
+if !String.instance_methods.include?(:red)
+  require_relative "#{ENV['USER_HOME'] || Dir.home}/code/dotfiles/utils/ruby/string_patches.rb"
+end
+
 # :nocov:
 # rubocop:disable Style/TopLevelMethodDefinition
 module Runger
