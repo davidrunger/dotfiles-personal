@@ -47,7 +47,7 @@ class Authenticator
 
   memoize \
   def auth_secret_path
-    "#{Dir.home}/Sync/notes/auth-codes/#{service}.txt"
+    "#{Dir.home}/Filen/notes/auth-codes/#{service}.txt"
   end
 
   memoize \
