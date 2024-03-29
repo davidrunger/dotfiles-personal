@@ -5,4 +5,13 @@
 set -euo pipefail # exit on any error, don't allow undefined variables, pipes don't swallow errors
 
 # NOTE: To work with iterm_opener, the editor executable must be an absolute path.
-/usr/local/bin/code -g "$@"
+# MacOS location
+if [ -e /usr/local/bin/code ]; then
+  /usr/local/bin/code -g "$@"
+# Linux location
+elif [ -e /usr/bin/code ]; then
+  /usr/bin/code -g "$@"
+else
+  red "Don't know where to find code executable."
+  exit 1
+fi
