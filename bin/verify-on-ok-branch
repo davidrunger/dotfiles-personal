@@ -4,7 +4,7 @@
 
 set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
 
-# commits to master are allowed for some projects
+# Allow commits to the primary branch for some projects.
 if [[
   $PWD == "$HOME/code/dotfiles" ||
   $PWD == "$HOME/code/dotfiles-personal" ||
@@ -15,7 +15,7 @@ if [[
   exit 0
 fi
 
-if [[ $(git rev-parse --abbrev-ref HEAD) =~ ^(safe|master)$ ]]
+if [[ $(git rev-parse --abbrev-ref HEAD) =~ ^(safe|master|main|trunk)$ ]]
 then
   echo "Change your branch name, silly!"
   exit 1 # failure code

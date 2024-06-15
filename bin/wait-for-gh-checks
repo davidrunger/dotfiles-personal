@@ -77,7 +77,7 @@ class WaitForChecksRunner
   memoize \
   def authors
     `git log \
-      origin/master..$(git rev-parse --abbrev-ref --symbolic-full-name @{u}) \
+      origin/$(main-branch)..$(git rev-parse --abbrev-ref --symbolic-full-name @{u}) \
       --oneline --no-merges --format='%an'`.split("\n").uniq
   end
 end
