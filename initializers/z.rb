@@ -281,6 +281,32 @@ def d
   system('clear')
 end
 
+# [b]ench[m]ark [m]easure
+def bmm
+  result = nil
+  exception = nil
+
+  time =
+    Benchmark.measure do
+      result = yield
+    rescue => exception
+      # do nothing for now
+    end.real
+
+  puts(<<~LOG.squish)
+    #{AmazingPrint::Colors.cyan('BENCHMARK TIME:')}
+    Took
+    #{AmazingPrint::Colors.purple('%.3f' % time.round(3))}
+    seconds.
+  LOG
+
+  if exception
+    raise exception
+  else
+    result
+  end
+end
+
 module FixtureBuilder
   class Builder
     module RungerPatches
