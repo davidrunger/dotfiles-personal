@@ -24,7 +24,7 @@ elif [[ $PWD =~ /david_runger$ ]] ; then
   # export CI=true
   set -x
   redis-cli -n 8 FLUSHDB
-  bin/pallets --verbose -r ./bin/run-tests.rb
+  bin/run-tests
 elif [[ $PWD =~ /runger_style$ ]] ; then
   set -x
   run_rubocop
