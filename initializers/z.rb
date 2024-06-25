@@ -42,9 +42,20 @@ $runger_redis = Redis.new(db: 2)
 class Runger::RungerConfig
   include Singleton
 
-  CONFIG_KEYS = %w[log_ar_trace log_expensive_queries].freeze
+  CONFIG_KEYS = %w[
+    log_ar_trace
+    log_expensive_queries
+    scratch
+  ].freeze
 
   CONFIG_KEYS.each do |config_key|
+    define_method(config_key) do
+      unless $runger_config_last_memoized_at && $runger_config_last_memoized_at >= 1.second.ago
+        memoize_settings_from_redis
+      end
+      instance_variable_get("@#{config_key}")
+    end
+
     define_method(:"#{config_key}?") do
       unless $runger_config_last_memoized_at && $runger_config_last_memoized_at >= 1.second.ago
         memoize_settings_from_redis
@@ -61,7 +72,15 @@ class Runger::RungerConfig
   end
 
   def setting_in_redis(setting_name)
-    JSON($runger_redis.get(setting_name) || 'false')
+    value = JSON($runger_redis.get(setting_name) || "null")
+
+    if value && setting_name == "scratch"
+      # rubocop:disable Security/MarshalLoad
+      Marshal.load(Base64.decode64(value))
+      # rubocop:enable Security/MarshalLoad
+    else
+      value
+    end
   end
 
   def set_in_redis(key, value, clear_memo: false)
@@ -101,9 +120,17 @@ def show_runger_config
 end
 
 Runger::RungerConfig::CONFIG_KEYS.each do |runger_config_key|
-  define_method(:"#{runger_config_key}!") do
-    Runger.config.set_in_redis(runger_config_key, true)
-    show_runger_config
+  define_method("#{runger_config_key}!") do |value = true, quiet: false, silent: false|
+    if runger_config_key == "scratch"
+      value = Base64.encode64(Marshal.dump(value))
+    end
+
+    Runger.config.set_in_redis(runger_config_key, value)
+
+    unless quiet || silent
+      show_runger_config
+    end
+
     true
   end
 
