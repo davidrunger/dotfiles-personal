@@ -56,18 +56,15 @@ class Runger::RungerConfig
       instance_variable_get("@#{config_key}")
     end
 
-    define_method(:"#{config_key}?") do
-      unless $runger_config_last_memoized_at && $runger_config_last_memoized_at >= 1.second.ago
-        memoize_settings_from_redis
-      end
-      instance_variable_get(:"@#{config_key}")
+    define_method("#{config_key}?") do
+      public_send(config_key).present?
     end
   end
 
   def memoize_settings_from_redis
     $runger_config_last_memoized_at = Time.current
     CONFIG_KEYS.each do |config_key|
-      instance_variable_set(:"@#{config_key}", setting_in_redis(config_key))
+      instance_variable_set("@#{config_key}", setting_in_redis(config_key))
     end
   end
 
@@ -84,8 +81,10 @@ class Runger::RungerConfig
   end
 
   def set_in_redis(key, value, clear_memo: false)
-    $runger_redis.set(key, value)
-    $runger_config_last_memoized_at = nil if clear_memo
+    $runger_redis.set(key, JSON.dump(value))
+    if clear_memo
+      $runger_config_last_memoized_at = nil
+    end
     true
   end
 
@@ -96,14 +95,14 @@ class Runger::RungerConfig
   end
 
   def setting(key)
-    instance_variable_get(:"@#{key}")
+    instance_variable_get("@#{key}")
   end
 
   def print_config
     max_key_length = CONFIG_KEYS.map(&:size).max
     CONFIG_KEYS.sort.map do |key|
       value = setting_in_redis(key)
-      puts("#{key.ljust(max_key_length + 1).yellow}: #{value ? value.to_s.green : value.to_s.red}")
+      puts("#{AmazingPrint::Colors.yellow(key.ljust(max_key_length + 1))}: #{value.ai}")
     end
     nil
   end
