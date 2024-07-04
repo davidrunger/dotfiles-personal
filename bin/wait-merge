@@ -11,14 +11,11 @@ gh pr merge "$GH_CHECKS_BRANCH" --squash
 say "P R merged"
 git fetch --no-tags --quiet origin "$(main-branch):$(main-branch)"
 
-# update "safe" branch as long as it's not checked out (which causes an update attempt to error)
-if [[ "$(git rev-parse --abbrev-ref HEAD)" != "safe" ]]; then
-  git fetch --no-tags --quiet origin "$(main-branch):safe"
-fi
-
 # switch to "safe" branch if still on the local branch that was just merged
-if [[ "$(git rev-parse --abbrev-ref HEAD)" == "$GH_CHECKS_BRANCH" ]]; then
-  git checkout safe >/dev/null 2>&1
+if [[ "$(branch)" == "$GH_CHECKS_BRANCH" ]]; then
+  safe
+else
+  update-main-branches
 fi
 
 git branch -d "$GH_CHECKS_BRANCH" >/dev/null 2>&1
