@@ -19,7 +19,8 @@ else
   update-main-branches
 fi
 
-git branch -d "$GH_CHECKS_BRANCH" >/dev/null 2>&1
+echo "--$GH_CHECKS_BRANCH=="
+git branch -d "$GH_CHECKS_BRANCH" # >/dev/null 2>&1
 prune-remote-branches-in-background
 echo "----"
 git branch -vv
