@@ -3,6 +3,7 @@
 # wait for all expected GitHub checks to pass, then merge the PR
 
 set -euo pipefail # exit on any error, don't allow undefined variables, pass errors through pipes
+set -x
 
 GH_CHECKS_BRANCH=$(branch)
 export GH_CHECKS_BRANCH
