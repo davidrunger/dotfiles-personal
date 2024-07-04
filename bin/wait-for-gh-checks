@@ -7,12 +7,13 @@ require 'active_support'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/core_ext/string/filters'
 require 'forwardable'
-require 'memoist'
 require 'open3'
-require_relative '../utils/ruby/printer.rb'
+
+require_relative "#{Dir.home}/code/dotfiles/utils/ruby/memoization.rb"
+require_relative "#{Dir.home}/code/dotfiles/utils/ruby/printer.rb"
 
 class WaitForChecksRunner
-  extend Memoist
+  prepend Memoization
 
   MAX_TIME = 8.minutes
   RETRY_INTERVAL = 10.seconds
@@ -84,7 +85,7 @@ end
 
 class WaitForChecksRunner::LoopRunner
   extend Forwardable
-  extend Memoist
+  prepend Memoization
 
   def_delegators(
     :@runner,

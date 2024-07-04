@@ -3,10 +3,10 @@
 
 # open a GitHub PR
 
-require 'memoist'
+require_relative "#{Dir.home}/code/dotfiles/utils/ruby/memoization.rb"
 
 class OpenPullRequestRunner
-  extend Memoist
+  prepend Memoization
 
   def initialize(create_pr_command_output)
     @create_pr_command_output = create_pr_command_output
