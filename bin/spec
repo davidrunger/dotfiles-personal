@@ -6,8 +6,9 @@ set -euo pipefail
 
 run_rubocop() {
   set +x
-  echo 'Running bin/rubocop $(git ls-tree -r HEAD --name-only) --force-exclusion'
-  bin/rubocop $(git ls-tree -r HEAD --name-only) --force-exclusion
+  readarray -t files_for_rubocop < <(git ls-tree -r HEAD --name-only)
+  echo 'Running RuboCop against all git-tracked files with --force-exclusion...'
+  bin/rubocop "${files_for_rubocop[@]}" --force-exclusion
   set -x
 }
 
