@@ -114,6 +114,10 @@ module Runger
   def self.config
     @config ||= Runger::RungerConfig.instance
   end
+
+  def self.david_runger_caller_lines
+    caller.select { |filename| filename.include?('/david_runger/') }.presence || caller
+  end
 end
 
 def show_runger_config
@@ -156,10 +160,9 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
   log_ar_trace = Runger.config.log_ar_trace?
 
   if log_expensive_queries || log_ar_trace
-    david_runger_caller_lines =
-      caller.select { |filename| filename.include?('/david_runger/') }.presence || caller
     david_runger_caller_lines_until_logging =
-      david_runger_caller_lines.
+      Runger.
+        david_runger_caller_lines.
         take_while { |line| line.exclude?('config/initializers/z.rb') }.
         presence || david_runger_caller_lines
   end
