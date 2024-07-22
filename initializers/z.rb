@@ -376,7 +376,7 @@ module RungerApplicationControllerPatches
   end
 end
 
-Rails.application.config.after_initialize do
+Rails.application.reloader.to_prepare do
   ApplicationController.prepend(RungerApplicationControllerPatches)
 end
 
