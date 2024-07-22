@@ -45,6 +45,7 @@ class Runger::RungerConfig
   include Singleton
 
   CONFIG_KEYS = %w[
+    current_user
     log_ar_trace
     log_expensive_queries
     scratch
@@ -117,6 +118,39 @@ module Runger
 
   def self.david_runger_caller_lines
     caller.select { |filename| filename.include?('/david_runger/') }.presence || caller
+  end
+
+  def self.log_puts(object = nil)
+    write_log(string_for(:puts, object))
+  end
+
+  def self.string_for(method_name, object)
+    string_io = StringIO.new
+    string_io.send(method_name, object)
+    string_io.rewind
+    string_io.read.rstrip
+  end
+
+  def self.write_log(message)
+    pairs =
+      if ::Rails.env.test?
+        if ::Rails.logger.respond_to?(:clear_tags!)
+          ::Rails.logger.clear_tags!
+        end
+        [[::Rails.logger, :info]].tap do |pair_list|
+          if Runger.config.log_to_stdout?
+            pair_list << [self, :puts]
+          end
+        end
+      else
+        [[self, :puts]]
+      end
+
+    pairs.each do |(recipient, write_method)|
+      recipient.send(write_method, message)
+    end
+
+    nil
   end
 end
 
@@ -301,6 +335,89 @@ if Rails.env.development? && $PROGRAM_NAME.include?('sidekiq')
       Sidekiq::Logger.prepend(RungerSidekiqLoggerPatches)
       config[:job_logger] = SidekiqExt::JobLogger
     end
+  end
+end
+
+module RungerApplicationControllerPatches
+  def current_user
+    if Rails.env.development?
+      super_current_user = super
+      config_user_identifier = Runger.config.current_user
+
+      if config_user_identifier.blank?
+        super_current_user
+      else
+        RequestStore.fetch("runger:current_user_by_config") do
+          ube(config_user_identifier).tap do |user_by_config|
+            if user_by_config.present? && user_by_config != super_current_user
+              sign_in(user_by_config)
+              # Having signed the user in, now allow logging out or logging in as a different user.
+              Runger.config.current_user!(nil, quiet: true)
+            end
+          end
+        end
+      end
+    else
+      super
+    end
+  end
+
+  def redirect_to(*args, **kwargs)
+    Runger.log_puts(AmazingPrint::Colors.purple("Redirecting to: #{args.first} #{kwargs}"))
+    Runger.log_puts(Runger.david_runger_caller_lines)
+    super
+  end
+
+  def sign_in(*args)
+    record = args.detect { |arg| arg.respond_to?(:email) }
+    Runger.log_puts(AmazingPrint::Colors.purple("Signing in #{record.class.name} #{record.email}."))
+    Runger.log_puts(Runger.david_runger_caller_lines)
+    super
+  end
+end
+
+Rails.application.config.after_initialize do
+  ApplicationController.prepend(RungerApplicationControllerPatches)
+end
+
+def quiet_ar
+  original_logger = ActiveRecord::Base.logger
+
+  ActiveRecord::Base.logger = ActiveSupport::Logger.new("/dev/null")
+
+  yield
+ensure
+  ActiveRecord::Base.logger = original_logger
+end
+
+# [u]ser [b]y [e]mail or id
+def ube(id_or_email)
+  if id_or_email.is_a?(Numeric) || id_or_email.match?(/\A\d+\z/)
+    User.find(Integer(id_or_email))
+  else
+    User.find_by!(email: id_or_email)
+  end
+end
+
+# [f]uzzy-find a [u]ser
+def fu(recent_login_only: false)
+  user_relation = User.reorder(:email)
+
+  if recent_login_only
+    user_relation = user_relation.where(current_sign_in_at: 1.year.ago..)
+  end
+
+  user_emails = quiet_ar { user_relation.pluck(:email) }
+
+  if (selected_email = fzf(user_emails))
+    ube(selected_email)
+  end
+end
+
+# [s]et current_[u]ser
+def su
+  if (email_to_log_in = fu&.email)
+    Runger.config.current_user!(email_to_log_in)
   end
 end
 
