@@ -48,6 +48,7 @@ class Runger::RungerConfig
     current_user
     log_ar_trace
     log_expensive_queries
+    log_to_stdout
     scratch
   ].freeze
 
