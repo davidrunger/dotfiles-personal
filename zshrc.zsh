@@ -7,4 +7,4 @@ export COMMIT_TO_MAIN_REGEX="$HOME/("\
 
 export NOTES_DIRECTORY="$HOME/Filen/notes"
 
-export EDITOR=code
+export EDITOR=editor
