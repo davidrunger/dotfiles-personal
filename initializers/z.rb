@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This is a Rails initializer with various patches/utilities that improve the Rails development
 # experience. It's called `z.rb` so that it runs after all other initializers (since they are
 # executed alphabetically).
