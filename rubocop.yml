@@ -3,8 +3,3 @@ inherit_gem:
     - rulesets/default.yml
     - rulesets/performance.yml
     - rulesets/rspec.yml
-
-Naming/FileName:
-  Exclude:
-    - spec/bin/open-gh-pr_spec.rb
-    - spec/bin/wait-for-gh-checks_spec.rb
