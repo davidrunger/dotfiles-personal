@@ -1,7 +1,4 @@
-[core]
-  editor = code --wait
 [credential]
   username = davidrunger
 [user]
   email = davidjrunger@gmail.com
-  name = David Runger
