@@ -197,7 +197,7 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
       Runger.
         david_runger_caller_lines.
         take_while { |line| line.exclude?('config/initializers/z.rb') }.
-        presence || david_runger_caller_lines
+        presence || Runger.david_runger_caller_lines
   end
 
   if log_expensive_queries
