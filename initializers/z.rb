@@ -46,6 +46,7 @@ unless IS_DOCKER
     CONFIG_KEYS = %w[
       current_user
       log_ar_trace
+      log_capybara
       log_expensive_queries
       log_to_stdout
       scratch
@@ -587,6 +588,21 @@ unless IS_DOCKER
     end
 
     prepend(RungerPatch) if Rails.env.development?
+  end
+
+  if Rails.env.test? && Runger.config.log_capybara?
+    module Capybara
+      module DSL
+        Session::DSL_METHODS.each do |method|
+          class_eval <<~METHOD, __FILE__, __LINE__ + 1
+            def #{method}(*args, **kwargs, &block)
+              pp(["#{method}", args, kwargs])
+              page.method("#{method}").call(*args, **kwargs, &block)
+            end
+          METHOD
+        end
+      end
+    end
   end
   # rubocop:enable Style/TopLevelMethodDefinition
   # :nocov:
