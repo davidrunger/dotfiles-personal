@@ -591,13 +591,16 @@ unless IS_DOCKER
     prepend(RungerPatch) if Rails.env.development?
   end
 
-  if Rails.env.test? && Runger.config.log_capybara?
+  if Rails.env.test?
     module Capybara
       module DSL
         Session::DSL_METHODS.each do |method|
           class_eval <<~METHOD, __FILE__, __LINE__ + 1
             def #{method}(*args, **kwargs, &block)
-              pp(["#{method}", args, kwargs])
+              if Runger.config.log_capybara?
+                pp(["#{method}", args, kwargs])
+              end
+
               page.method("#{method}").call(*args, **kwargs, &block)
             end
           METHOD
