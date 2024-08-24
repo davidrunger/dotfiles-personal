@@ -50,6 +50,7 @@ unless IS_DOCKER
       log_expensive_queries
       log_to_stdout
       scratch
+      skip_schema_validation
     ].freeze
 
     CONFIG_KEYS.each do |config_key|
