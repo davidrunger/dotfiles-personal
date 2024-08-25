@@ -598,7 +598,9 @@ unless IS_DOCKER
           class_eval <<~METHOD, __FILE__, __LINE__ + 1
             def #{method}(*args, **kwargs, &block)
               if Runger.config.log_capybara?
-                pp(["#{method}", args, kwargs])
+                log_data = ["#{method}", args, kwargs]
+                pp(log_data)
+                Rails.logger.info(log_data)
               end
 
               page.method("#{method}").call(*args, **kwargs, &block)
