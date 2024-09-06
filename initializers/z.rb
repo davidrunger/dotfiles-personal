@@ -437,11 +437,11 @@ unless IS_DOCKER
     exception = nil
 
     time =
-      Benchmark.measure do
+      Benchmark.realtime do
         result = yield
       rescue => exception
         # do nothing for now
-      end.real
+      end
 
     puts(<<~LOG.squish)
       #{AmazingPrint::Colors.cyan('BENCHMARK TIME:')}
