@@ -3,14 +3,16 @@
 # executed alphabetically).
 
 unless IS_DOCKER
-  if defined?(Pry)
-    # Load the pry enhancements defined in `pryrc.rb` of dotfiles repo.
-    load("#{Dir.home}/.pryrc")
-  end
+  Rails.application.config.after_initialize do
+    if defined?(Pry)
+      # Load the pry enhancements defined in `pryrc.rb` of dotfiles repo.
+      load("#{Dir.home}/.pryrc")
+    end
 
-  if defined?(IRB)
-    # Load the IRB enhancements defined in `irbrc.rb` of dotfiles repo.
-    load("#{Dir.home}/.irbrc.rb")
+    if defined?(IRB)
+      # Load the IRB enhancements defined in `irbrc.rb` of dotfiles repo.
+      load("#{Dir.home}/.irbrc.rb")
+    end
   end
 
   if Rails.env.local? && !String.instance_methods.include?(:red)
