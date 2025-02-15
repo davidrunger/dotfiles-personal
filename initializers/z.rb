@@ -435,7 +435,7 @@ def d
 end
 
 # [b]ench[m]ark [m]easure
-def bmm
+def bmm(label = nil)
   result = nil
   exception = nil
 
@@ -447,7 +447,7 @@ def bmm
     end
 
   puts(<<~LOG.squish)
-    #{AmazingPrint::Colors.cyan('BENCHMARK TIME:')}
+    #{AmazingPrint::Colors.cyan("#{label || 'BENCHMARK'} TIME:")}
     Took
     #{AmazingPrint::Colors.purple('%.3f' % time.round(3))}
     seconds.
