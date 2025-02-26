@@ -513,7 +513,7 @@ if Rails.env.test?
     private
 
     def description_separator(parent_part, child_part)
-      if parent_part.is_a?(Module) && child_part =~ /^(#|::|\.)/
+      if parent_part.is_a?(Module) && child_part.to_s =~ /^(#|::|\.)/
         ''
       else
         ' / '
