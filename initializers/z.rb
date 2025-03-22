@@ -561,24 +561,24 @@ class Rollbar::Notifier
   prepend(RungerPatch) if Rails.env.development?
 end
 
+# rubocop:disable Style/DocumentDynamicEvalDefinition
 if Rails.env.test?
-  module Capybara
-    module DSL
-      Session::DSL_METHODS.each do |method|
-        class_eval <<~METHOD, __FILE__, __LINE__ + 1
-          def #{method}(*args, **kwargs, &block)
-            if Runger.config.log_capybara?
-              log_data = ["#{method}", args, kwargs]
-              pp(log_data)
-              Rails.logger.info(log_data)
-            end
-
-            page.method("#{method}").call(*args, **kwargs, &block)
+  module Capybara::DSL
+    Session::DSL_METHODS.each do |method|
+      class_eval <<~METHOD, __FILE__, __LINE__ + 1
+        def #{method}(*args, **kwargs, &block)
+          if Runger.config.log_capybara?
+            log_data = ["#{method}", args, kwargs]
+            pp(log_data)
+            Rails.logger.info(log_data)
           end
-        METHOD
-      end
+
+          page.method("#{method}").call(*args, **kwargs, &block)
+        end
+      METHOD
     end
   end
 end
+# rubocop:enable Style/DocumentDynamicEvalDefinition
 # rubocop:enable Style/TopLevelMethodDefinition
 # :nocov:
