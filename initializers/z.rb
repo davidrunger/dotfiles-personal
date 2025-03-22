@@ -506,7 +506,6 @@ class Rollbar::Notifier
       AmazingPrint::Colors.public_send(color, "Rollbar #{level}:")
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
     def error_log(level, args)
       message, exception, extra, context = extract_arguments(args)
       item = build_item(level, message, exception, extra, context)
@@ -539,7 +538,6 @@ class Rollbar::Notifier
 
       message
     end
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def log(level, *args)
       super_result = super
