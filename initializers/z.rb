@@ -564,7 +564,7 @@ end
 # rubocop:disable Style/DocumentDynamicEvalDefinition
 if Rails.env.test?
   module Capybara::DSL
-    Session::DSL_METHODS.each do |method|
+    Capybara::Session::DSL_METHODS.each do |method|
       class_eval <<~METHOD, __FILE__, __LINE__ + 1
         def #{method}(*args, **kwargs, &block)
           if Runger.config.log_capybara?
