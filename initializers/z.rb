@@ -558,7 +558,7 @@ class Rollbar::Notifier
     end
   end
 
-  prepend(RungerPatch) if Rails.env.development?
+  prepend(RungerPatch) if Rails.env.development? && !ENV.key?('SKIP_ROLLBAR_MONKEYPATCH')
 end
 
 # rubocop:disable Style/DocumentDynamicEvalDefinition
