@@ -508,7 +508,8 @@ class Rollbar::Notifier
 
     def error_log(level, args)
       message, exception, extra, context = extract_arguments(args)
-      item = build_item(level, message, exception, extra, context)
+      is_uncaught = uncaught?(extra)
+      item = build_item(level, message, exception, extra, context, is_uncaught)
       error_class, error_message =
         item.build_data.dig(:body, :trace, :exception).presence&.values_at(:class, :message)
 
