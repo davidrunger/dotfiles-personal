@@ -572,6 +572,8 @@ if Rails.env.test?
             log_data = ["#{method}", args, kwargs]
             pp(log_data)
             Rails.logger.info(log_data)
+            STDIN.gets
+            nil
           end
 
           page.method("#{method}").call(*args, **kwargs, &block)
