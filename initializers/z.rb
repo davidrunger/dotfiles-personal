@@ -22,7 +22,7 @@ end
 
 load("#{Dir.home}/code/dotfiles/utils/ruby/debug.rb")
 
-# :nocov:
+# simplecov:disable
 # rubocop:disable Style/TopLevelMethodDefinition
 module Runger
 end
@@ -324,6 +324,7 @@ module RungerApplicationControllerPatches
         RequestStore.fetch("runger:current_user_by_config") do
           ube(config_user_identifier).tap do |user_by_config|
             if user_by_config.present? && user_by_config != super_current_user
+              request.env['authenticated_session.authentication_kind.user'] = 'legacy'
               sign_in(user_by_config)
               # Having signed the user in, now allow logging out or logging in as a different user.
               Runger.config.current_user!(nil, quiet: true)
@@ -584,4 +585,4 @@ if Rails.env.test?
 end
 # rubocop:enable Style/DocumentDynamicEvalDefinition
 # rubocop:enable Style/TopLevelMethodDefinition
-# :nocov:
+# simplecov:enable
