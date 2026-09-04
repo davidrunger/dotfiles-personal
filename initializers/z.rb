@@ -573,7 +573,8 @@ if Rails.env.test?
             log_data = ["#{method}", args, kwargs]
             pp(log_data)
             Rails.logger.info(log_data)
-            STDIN.gets
+            sleep_time = STDIN.gets.strip.to_i
+            sleep(sleep_time)
             nil
           end
 
