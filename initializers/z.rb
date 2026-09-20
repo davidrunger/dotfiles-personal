@@ -1,7 +1,11 @@
+# rubocop:disable Style/FrozenStringLiteralComment, Lint/RedundantCopDisableDirective
+# rubocop:enable Style/FrozenStringLiteralComment, Lint/RedundantCopDisableDirective
+
 # This is a Rails initializer with various patches/utilities that improve the Rails development
 # experience. It's called `z.rb` so that it runs after all other initializers (since they are
 # executed alphabetically).
 
+# rubocop:disable-next RungerStyle/NoReturn, RungerStyle/IfUnlessModifier
 return if IS_DOCKER
 
 Rails.application.config.after_initialize do
@@ -16,7 +20,7 @@ Rails.application.config.after_initialize do
   end
 end
 
-if Rails.env.local? && !String.instance_methods.include?(:red)
+if Rails.env.local? && !String.method_defined?(:red)
   require_relative "#{ENV['USER_HOME'] || Dir.home}/code/dotfiles/utils/ruby/string_patches.rb"
 end
 
@@ -37,7 +41,9 @@ if Rails.env.development?
   %i[automatic_user_login automatic_admin_login].each do |feature|
     originally_enabled = Flipper.enabled?(feature)
     Flipper.enable(feature)
-    Flipper.disable(feature) if !originally_enabled
+    if !originally_enabled
+      Flipper.disable(feature)
+    end
   end
 end
 
@@ -77,12 +83,11 @@ class Runger::RungerConfig
   end
 
   def setting_in_redis(setting_name)
-    value = JSON($runger_redis.get(setting_name) || "null")
+    value = JSON($runger_redis.get(setting_name) || 'null')
 
-    if value && setting_name == "scratch"
-      # rubocop:disable Security/MarshalLoad
+    if value && setting_name == 'scratch'
+      # rubocop:disable-next Security/MarshalLoad
       Marshal.load(Base64.decode64(value))
-      # rubocop:enable Security/MarshalLoad
     else
       value
     end
@@ -165,7 +170,7 @@ end
 
 Runger::RungerConfig::CONFIG_KEYS.each do |runger_config_key|
   define_method("#{runger_config_key}!") do |value = true, quiet: false, silent: false|
-    if runger_config_key == "scratch"
+    if runger_config_key == 'scratch'
       value = Base64.encode64(Marshal.dump(value))
     end
 
@@ -209,10 +214,11 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
   if log_expensive_queries
     time = finish - start
     $runger_expensive_queries ||= {}
-    $runger_expensive_queries[time] = [
-      "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}",
-      david_runger_caller_lines_until_logging,
-    ]
+    $runger_expensive_queries[time] =
+      [
+        "#{payload[:sql]} #{payload[:binds].map { |b| [b.name, b.value] }}",
+        david_runger_caller_lines_until_logging,
+      ]
   end
 
   if log_ar_trace
@@ -222,24 +228,28 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, start, fi
       ^ the above query (took #{AmazingPrint::Colors.red((finish - start).round(3).to_s)} sec)
       was triggered by the below stack trace \\/
     LOG
-    puts(david_runger_caller_lines_until_logging.map { AmazingPrint::Colors.yellow(_1) })
+    puts(david_runger_caller_lines_until_logging.map { AmazingPrint::Colors.yellow(it) })
     puts("#{'-' * 100}\n")
   end
 end
 
 ActiveSupport::Notifications.subscribe('process_action.action_controller') do |*args|
-  next unless Runger.config.log_expensive_queries?
+  unless Runger.config.log_expensive_queries?
+    next
+  end
 
   payload = args.extract_options!
 
   controller_name = payload[:controller]
-  next if controller_name == 'AnonymousController' # this occurs in tests
+  if controller_name == 'AnonymousController' # this occurs in tests
+    next
+  end
 
   puts("\nMost expensive queries:")
   $runger_expensive_queries.sort.last(3).each do |time, (query, backtrace)|
     puts("#{AmazingPrint::Colors.red(time.round(3).to_s)} seconds")
     puts(AmazingPrint::Colors.blue(query))
-    puts(backtrace.map { AmazingPrint::Colors.yellow(_1) })
+    puts(backtrace.map { AmazingPrint::Colors.yellow(it) })
     puts
   end
 
@@ -321,7 +331,7 @@ module RungerApplicationControllerPatches
       if config_user_identifier.blank?
         super_current_user
       else
-        RequestStore.fetch("runger:current_user_by_config") do
+        RequestStore.fetch('runger:current_user_by_config') do
           ube(config_user_identifier).tap do |user_by_config|
             if user_by_config.present? && user_by_config != super_current_user
               request.env['authenticated_session.authentication_kind.user'] = 'legacy'
@@ -358,7 +368,7 @@ end
 def quiet_ar
   original_logger = ActiveRecord::Base.logger
 
-  ActiveRecord::Base.logger = ActiveSupport::Logger.new("/dev/null")
+  ActiveRecord::Base.logger = ActiveSupport::Logger.new(File::NULL)
 
   yield
 ensure
@@ -424,7 +434,7 @@ def bmm(label = nil)
   LOG
 
   if exception
-    raise exception
+    raise(exception)
   else
     result
   end
@@ -446,7 +456,7 @@ module FixtureBuilder
   class Namer
     module RungerPatches
       def name(custom_name, *model_objects)
-        print "#{custom_name} "
+        print("#{custom_name} ")
         super
       end
     end
@@ -560,10 +570,12 @@ class Rollbar::Notifier
     end
   end
 
-  prepend(RungerPatch) if Rails.env.development? && !ENV.key?('SKIP_ROLLBAR_MONKEYPATCH')
+  if Rails.env.development? && !ENV.key?('SKIP_ROLLBAR_MONKEYPATCH')
+    prepend(RungerPatch)
+  end
 end
 
-# rubocop:disable Style/DocumentDynamicEvalDefinition
+# rubocop:disable-next Style/DocumentDynamicEvalDefinition
 if Rails.env.test?
   module Capybara::DSL
     Capybara::Session::DSL_METHODS.each do |method|
@@ -584,6 +596,5 @@ if Rails.env.test?
     end
   end
 end
-# rubocop:enable Style/DocumentDynamicEvalDefinition
 # rubocop:enable Style/TopLevelMethodDefinition
 # simplecov:enable
