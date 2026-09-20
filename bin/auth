@@ -1,55 +1,184 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Example usage:
-#     auth github #=> copies two-factor authentication code for GitHub login to clipboard
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
+
+require 'bundler/setup'
+require 'fileutils'
+require 'open3'
+require 'command_kit'
+require 'command_kit/colors'
+require 'command_kit/interactive'
 
 require_relative "#{Dir.home}/code/dotfiles/utils/ruby/copy_utils.rb"
-require_relative "#{Dir.home}/code/dotfiles/utils/ruby/memoization.rb"
 
-class Authenticator
+class Authenticator < CommandKit::Command
   include CopyUtils
-  prepend Memoization
+  include CommandKit::Colors
+  include CommandKit::Interactive
 
-  def copy_auth_code_to_clipboard
-    if backup_codes_exist?
-      cpp(auth_code)
+  AUTH_SECRET_DIRECTORY = File.join(Dir.home, 'Filen/notes/auth-codes')
+  BACKUP_CODES_DIRECTORY = File.join(Dir.home, 'Documents/backup-codes')
+
+  class SetupError < StandardError
+  end
+
+  usage '[OPTIONS] [SERVICE]'
+
+  command_name 'auth'
+
+  description 'Copy a two-factor authentication code or set up a new auth service.'
+
+  option :new, short: '-n', desc: 'Set up a new authentication service.'
+
+  argument :service, required: false, usage: 'SERVICE', desc: 'Existing authentication service.'
+
+  def initialize(
+    auth_secret_directory: AUTH_SECRET_DIRECTORY,
+    backup_codes_directory: BACKUP_CODES_DIRECTORY,
+    **kwargs
+  )
+    @auth_secret_directory = File.expand_path(auth_secret_directory)
+    @backup_codes_directory = File.expand_path(backup_codes_directory)
+
+    super(**kwargs)
+  end
+
+  def run(service_name = nil)
+    if options[:new]
+      if service_name
+        raise(SetupError, 'SERVICE cannot be given with --new.')
+      end
+
+      setup_new_service
+    elsif service_name
+      copy_auth_code_to_clipboard(service_name)
     else
-      puts(AmazingPrint::Colors.red("First, save backup codes at #{backup_codes_path} !"))
+      help
     end
   end
 
   private
 
-  memoize \
+  def copy_auth_code_to_clipboard(service_name)
+    @service = normalize_service_name(service_name)
+
+    if backup_codes_exist?
+      copy_code_to_clipboard(generate_auth_code(auth_secret))
+    else
+      puts(colors.red("First, save backup codes at #{backup_codes_path} !"))
+    end
+  end
+
+  def setup_new_service
+    entered_name = ask_required('Name of new auth service')
+    @service = normalize_service_name(entered_name)
+
+    if File.exist?(auth_secret_path) || File.exist?(backup_codes_path)
+      raise(SetupError, "Refusing to overwrite files for #{@service}.")
+    end
+
+    secret = ask_required('Auth secret')
+
+    write_new_file(auth_secret_path, secret)
+
+    code = generate_auth_code(secret)
+    copy_code_to_clipboard(code)
+
+    backup_codes = ask_multiline(
+      'Backup code(s)',
+      help: 'Paste one code per line, then press Enter twice to finish',
+      terminator: :double_newline,
+    ).strip
+    if backup_codes.empty?
+      raise(SetupError, 'At least one backup code is required.')
+    end
+
+    write_new_file(backup_codes_path, backup_codes)
+    print_summary(@service, secret, backup_codes)
+  end
+
+  def ask_required(prompt)
+    value = ask(prompt).strip
+
+    if value.empty?
+      raise(SetupError, "#{prompt} is required.")
+    end
+
+    value
+  end
+
+  def write_new_file(path, content)
+    FileUtils.mkdir_p(File.dirname(path))
+    File.open(path, File::WRONLY | File::CREAT | File::EXCL, 0o600) do |file|
+      file.write("#{content}\n")
+    end
+  rescue Errno::EEXIST
+    raise(SetupError, "Refusing to overwrite existing file: #{path}.")
+  end
+
+  def print_summary(service_name, secret, backup_codes)
+    puts
+    puts('New authentication service set up:')
+    print_summary_line('Name', service_name)
+    print_summary_line('Auth Secret', secret)
+    print_summary_line('Auth Secret File', auth_secret_path)
+    puts("#{summary_label('Backup Code(s)')}:")
+    puts(backup_codes)
+    print_summary_line('Backup Codes File', backup_codes_path)
+  end
+
+  def print_summary_line(label, value)
+    puts("#{summary_label(label)}: #{value}")
+  end
+
+  def summary_label(label)
+    colors.cyan(label)
+  end
+
+  def copy_code_to_clipboard(code)
+    cpp(code)
+  end
+
+  def generate_auth_code(secret)
+    output, _error, status = Open3.capture3('oathtool', '--totp', '-b', secret)
+    code = output.rstrip
+    if status.success? && !code.empty?
+      code
+    else
+      raise(SetupError, 'Could not generate an auth code with oathtool.')
+    end
+  rescue Errno::ENOENT
+    raise(SetupError, 'Could not generate an auth code because oathtool is not installed.')
+  end
+
   def backup_codes_exist?
     File.exist?(backup_codes_path)
   end
 
-  memoize \
   def backup_codes_path
-    "#{Dir.home}/Documents/backup-codes/#{service}.txt"
+    File.join(@backup_codes_directory, "#{@service}.txt")
   end
 
-  memoize \
-  def auth_code
-    `oathtool --totp -b "#{auth_secret}"`.rstrip
-  end
-
-  memoize \
   def auth_secret
     File.read(auth_secret_path).rstrip
   end
 
-  memoize \
   def auth_secret_path
-    "#{Dir.home}/Filen/notes/auth-codes/#{service}.txt"
+    File.join(@auth_secret_directory, "#{@service}.txt")
   end
 
-  memoize \
-  def service
-    ARGV.first.downcase
+  def normalize_service_name(name)
+    service = name.strip.downcase
+
+    if service.empty? || service.match?(/[\/\x00-\x1f\x7f]/) || %w[. ..].include?(service)
+      raise(SetupError, 'The service name must be a safe, non-empty file name.')
+    end
+
+    service
   end
 end
 
-Authenticator.new.copy_auth_code_to_clipboard
+if __FILE__ == $PROGRAM_NAME
+  Authenticator.start
+end
