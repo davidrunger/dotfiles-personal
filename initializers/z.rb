@@ -136,7 +136,7 @@ module Runger
 
   def self.string_for(method_name, object)
     string_io = StringIO.new
-    string_io.send(method_name, object)
+    string_io.__send__(method_name, object)
     string_io.rewind
     string_io.read.rstrip
   end
@@ -157,7 +157,7 @@ module Runger
       end
 
     pairs.each do |(recipient, write_method)|
-      recipient.send(write_method, message)
+      recipient.__send__(write_method, message)
     end
 
     nil
